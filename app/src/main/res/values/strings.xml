@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OtusHomeWork1</string>
+    <string name="app_name">CinemaArchive</string>
 
     <string name="detail">Detail</string>
     <string name="film_1">Film 1</string>
@@ -10,5 +10,9 @@
     <string name="comment">Comment</string>
     <string name="ic_share">ic_share</string>
     <string name="Invite_friends">Invite friends</string>
+    <string name="favorite">Favorite</string>
+    <string name="home">Home</string>
+    <string name="favorites_list_empty">Favorites list empty</string>
+    <string name="description">description...</string>
 
 </resources>
