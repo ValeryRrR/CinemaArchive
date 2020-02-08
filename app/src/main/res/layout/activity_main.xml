@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
     tools:context=".MainActivity">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/imageView_1"
@@ -24,7 +21,7 @@
 
         <TextView
             android:id="@+id/textView_name"
-            style="@style/TextAppearance.AppCompat.Title"
+            style="@style/mHeaderStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/spies_in_disgues"
@@ -33,13 +30,15 @@
 
         <TextView
             android:id="@+id/textView_description"
+            style="@style/mTextDescriptionStyle"
             android:layout_width="223dp"
             android:layout_height="96dp"
             android:layout_marginStart="16dp"
             app:layout_constraintEnd_toEndOf="@+id/button_detail"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="@+id/imageView"
-            tools:text="When the world's best spy is turned into a pigeon, he must rely on his nerdy tech officer to save the world." />
+            tools:text="When the world's best spy is turned into a pigeon, he must rely on his nerdy tech officer to save the world."
+            android:text="When the world's best spy is turned into a pigeon, he must rely on his nerdy tech officer to save the world." />
 
         <ImageView
             android:id="@+id/imageView"
@@ -54,7 +53,7 @@
 
         <TextView
             android:id="@+id/textView_name_2"
-            style="@style/TextAppearance.AppCompat.Title"
+            style="@style/mHeaderStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/union_of_safety"
@@ -89,4 +88,3 @@
             app:layout_constraintGuide_begin="240dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>

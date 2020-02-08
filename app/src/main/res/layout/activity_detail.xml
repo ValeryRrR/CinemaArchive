@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/film_name"
-            style="@style/TextAppearance.AppCompat.Title"
+            style="@style/mHeaderStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

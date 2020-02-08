@@ -1,15 +1,17 @@
 package com.example.cinemaarchive
 
 import android.content.Intent
-import android.graphics.Color
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.otushomework1.Film
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 const val DETAIL_REQUEST_CODE = 1
 const val INTENT_EXTRA_NAME = "INTENT_EXTRA_NAME"
@@ -23,8 +25,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        film = Film("Spies in disgues", "desc", R.drawable.spies_in_disgues, false, "")
-        film2 = Film("Union of safety", "desc", R.drawable.union_of_safety, false, "")
+        film = Film(getString(R.string.spies_in_disgues), "desc", R.drawable.spies_in_disgues, false, "")
+        film2 = Film(getString(R.string.union_of_safety), "desc", R.drawable.union_of_safety, false, "")
 
         onRestoreState(savedInstanceState)
 
@@ -33,10 +35,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setListeners() {
         button_detail.setOnClickListener {
-            markChosenFilmName(textView_name); startDetailActivity(film, INTENT_EXTRA_NAME)
+            startDetailActivity(film, INTENT_EXTRA_NAME)
         }
         button_detail_2.setOnClickListener {
-            markChosenFilmName(textView_name_2); startDetailActivity(film2, INTENT_EXTRA_NAME)
+            startDetailActivity(film2, INTENT_EXTRA_NAME)
         }
     }
 
@@ -60,23 +62,11 @@ class MainActivity : AppCompatActivity() {
         Log.d("Result", film.name + " comment = " + film.comment + ",  film favorite = " + film.isFavorite)
     }
 
-    private fun markChosenFilmName(textView: TextView) {
-        fun clearSelections() {
-            textView_name.setTextColor(Color.BLACK)
-            textView_name_2.setTextColor(Color.BLACK)
-        }
-        clearSelections()
-        textView.setTextColor(Color.RED)
-    }
-
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.apply {
             putParcelable("Film1", film)
             putParcelable("Film2", film2)
-            putInt("CurrentColor1", textView_name.currentTextColor)
-            putInt("CurrentColor2", textView_name_2.currentTextColor)
         }
     }
 
@@ -84,8 +74,6 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             film = savedInstanceState.getParcelable("Film1") as Film
             film2 = savedInstanceState.getParcelable("Film2") as Film
-            textView_name.setTextColor(savedInstanceState.getInt("CurrentColor1"))
-            textView_name_2.setTextColor(savedInstanceState.getInt("CurrentColor2"))
         }
     }
 
@@ -95,8 +83,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.ic_share)
-            share()
+        when (item?.itemId) {
+            R.id.ic_share -> share()
+            R.id.dark_mode -> changeTheme()
+        }
         return true
     }
 
@@ -108,5 +98,31 @@ class MainActivity : AppCompatActivity() {
         }
         val shareIntent = Intent.createChooser(sendIntent, getString(R.string.Invite_friends))
         startActivity(shareIntent)
+    }
+
+     override fun  onBackPressed() {
+        showCloseDialog()
+    }
+
+    private fun showCloseDialog(){
+        val builder = AlertDialog.Builder(this)
+
+        builder.apply {
+            setMessage(getString(R.string.closeDialogMessage))
+                .setTitle(getString(R.string.closeDialogTitle))
+            setPositiveButton(R.string.ok) { dialog, id -> super.onBackPressed() }
+            setNegativeButton(R.string.cancel) { dialog, id -> }
+            create().show()
+        }
+    }
+
+    private fun changeTheme(){
+        val currentNightMode = (resources.configuration.uiMode
+                and Configuration.UI_MODE_NIGHT_MASK)
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_YES -> { AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)}
+            Configuration.UI_MODE_NIGHT_NO -> { AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)}
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> { Log.d("", "UI_MODE_NIGHT_UNDEFINED")}
+        }
     }
 }

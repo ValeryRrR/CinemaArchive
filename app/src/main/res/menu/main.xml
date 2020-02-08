@@ -4,9 +4,14 @@
 
     <item
         android:id="@+id/ic_share"
-        android:icon="@drawable/ic_share_black_24dp"
-        android:title="@string/ic_share"
-        app:showAsAction="always">
+        android:icon="@drawable/ic_share_24dp"
+        android:title="@string/share"
+        app:showAsAction="ifRoom">
+    </item>
+<item
+        android:id="@+id/dark_mode"
+        android:title="@string/dark_theme"
+        app:showAsAction="never">
     </item>
 
 </menu>

@@ -1,14 +1,20 @@
 <resources>
-    <string name="app_name">OtusHomeWork1</string>
+    <string name="app_name">Cinema Archive</string>
 
     <string name="detail">Detail</string>
-    <string name="film_1">Film 1</string>
-    <string name="film_2_album">Film 2 Album</string>
+    <string name="film_1" translatable="false">Film 1</string>
+    <string name="film_2_album" translatable="false">Film 2 Album</string>
 
     <string name="spies_in_disgues">Spies in disgues</string>
     <string name="union_of_safety">Union of safety</string>
     <string name="comment">Comment</string>
-    <string name="ic_share">ic_share</string>
+    <string name="ic_share" translatable="false">ic_share</string>
     <string name="Invite_friends">Invite friends</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">cancel</string>
+    <string name="closeDialogMessage">Are you sure you want to exit the application?</string>
+    <string name="closeDialogTitle">Exit Application</string>
+    <string name="share">share</string>
+    <string name="dark_theme">Dark theme</string>
 
 </resources>

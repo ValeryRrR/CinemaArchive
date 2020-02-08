@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Кино-Архив</string>
+    <string name="Invite_friends">Пригласить друга</string>
+    <string name="comment">Комментарий</string>
+    <string name="union_of_safety">Союз спасения</string>
+    <string name="spies_in_disgues">Камуфляж и шпионаж</string>
+    <string name="ok">Ок</string>
+    <string name="cancel">отмена</string>
+    <string name="closeDialogMessage">Вы уверены, что хотите выйти из приложения?</string>
+    <string name="closeDialogTitle">Выход из приложения</string>
+    <string name="share">поделиться</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="detail">Детали</string>
+</resources>
