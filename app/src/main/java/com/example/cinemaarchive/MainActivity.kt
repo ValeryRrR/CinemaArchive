@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.cinemaarchive.detailfilm.DetailFragment
 import com.example.cinemaarchive.detailfilm.OnFilmDetailFragmentListener
@@ -16,11 +17,14 @@ import com.example.cinemaarchive.repository.database.Database
 import kotlinx.android.synthetic.main.activity_main.*
 
 import com.example.cinemaarchive.detailfilm.FILM_DETAIL_FRAGMENT_TAG
+import com.example.cinemaarchive.detailfilm.IBottomNavOwner
 import com.example.cinemaarchive.filmlist.FILM_LIST_FRAGMENT_TAG
 import com.example.cinemaarchive.faforitelist.FAVORITE_LIST_FRAGMENT_TAG
+import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainActivity : AppCompatActivity(),
-    OnFilmDetailFragmentListener {
+    OnFilmDetailFragmentListener,
+    IBottomNavOwner{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,8 +86,6 @@ class MainActivity : AppCompatActivity(),
         val filmDetailFragment = DetailFragment()
         filmDetailFragment.arguments = bundle
 
-        buttom_navigation_view.visibility = View.GONE
-
         supportFragmentManager.beginTransaction()
             .replace(R.id.container_fragment, filmDetailFragment, FILM_DETAIL_FRAGMENT_TAG)
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -141,5 +143,9 @@ class MainActivity : AppCompatActivity(),
         }
         val shareIntent = Intent.createChooser(sendIntent, getString(R.string.Invite_friends))
         startActivity(shareIntent)
+    }
+
+    override fun getBottomBar(): View {
+        return buttom_navigation_view
     }
 }

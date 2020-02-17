@@ -30,8 +30,7 @@ class FilmViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             itemClickListener.onItemClicked(item)
         }
         favoriteTbtn.setOnClickListener{
-            item.isFavorite = favoriteTbtn.isChecked
-            likeClickListener.onLikeClicked(item, position)
+            likeClickListener.onLikeClicked(item, position, favoriteTbtn.isChecked)
         }
     }
 
