@@ -11,7 +11,7 @@ import com.example.cinemaarchive.detailfilm.OnFilmDetailFragmentListener
 import com.example.cinemaarchive.repository.Film
 import com.example.cinemaarchive.repository.FilmRecyclerAdapter
 import com.example.cinemaarchive.repository.database.Database
-import kotlinx.android.synthetic.main.favorite_fragment.*
+import kotlinx.android.synthetic.main.main_fragment.*
 
 
 const val FILM_LIST_FRAGMENT_TAG = "FILM_LIST_FRAGMENT"
@@ -26,7 +26,7 @@ class FilmListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return inflater.inflate(R.layout.favorite_fragment, container, false)
+        return inflater.inflate(R.layout.main_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,9 +37,9 @@ class FilmListFragment : Fragment() {
 
 
     private fun showRecyclerWithFilms(items: List<Film>) {
-        favorite_fragment_recycler.adapter =
+        main_fragment_recycler.adapter =
             FilmRecyclerAdapter(
-                LayoutInflater.from(favorite_fragment_recycler.context),
+                LayoutInflater.from(main_fragment_recycler.context),
                 items,
                 object :
                     FilmRecyclerAdapter.OnItemClickListener {
@@ -49,10 +49,11 @@ class FilmListFragment : Fragment() {
                 },
                 object :
                     FilmRecyclerAdapter.OnLikeClickListener {
-                    override fun onLikeClicked(film: Film, position: Int) {
-                        if (film.isFavorite)
+                    override fun onLikeClicked(film: Film, position: Int, isFavoriteChecked: Boolean) {
+                        film.isFavorite = isFavoriteChecked
+                        if (isFavoriteChecked)
                             Database.favoriteList.add(film)
-                        else if (!film.isFavorite)
+                        else if (!isFavoriteChecked)
                             Database.favoriteList.remove(film)
                     }
                 })

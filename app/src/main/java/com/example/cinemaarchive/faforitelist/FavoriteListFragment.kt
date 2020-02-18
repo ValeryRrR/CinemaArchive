@@ -31,13 +31,16 @@ class FavoriteListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (Database.favoriteList.isEmpty())
+        val favoriteList: List<Film>? = arguments?.getParcelableArrayList("favoriteList")
+
+        if (favoriteList == null || favoriteList.isEmpty())
             favorites_list_empty.text = getString(R.string.favorites_list_empty)
-        else showRecyclerWithFilms(arguments?.getParcelableArrayList("favoriteList")!!)
+        else showRecyclerWithFilms(favoriteList)
     }
 
 
     private fun showRecyclerWithFilms(items: List<Film>) {
+
         favorite_list_recycler.adapter =
             FilmRecyclerAdapter(
                 LayoutInflater.from(favorite_list_recycler.context),
@@ -50,10 +53,12 @@ class FavoriteListFragment : Fragment() {
                 },
                 object :
                     FilmRecyclerAdapter.OnLikeClickListener {
-                    override fun onLikeClicked(film: Film, position: Int) {
-                        if (!film.isFavorite) {
+                    override fun onLikeClicked(film: Film, position: Int, isFavoriteChecked: Boolean) {
+                        film.isFavorite = isFavoriteChecked
+                        if (!isFavoriteChecked) {
                             Database.favoriteList.remove(film)
                             favorite_list_recycler.adapter?.notifyItemRemoved(position)
+                            (favorite_list_recycler.adapter as FilmRecyclerAdapter).onItemRemove(position,film, favorite_list_recycler)
                         }
                     }
                 })

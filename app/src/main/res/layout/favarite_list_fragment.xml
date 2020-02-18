@@ -6,20 +6,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/favorites_list_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_margin="24dp"
-        style="@style/TextAppearance.MaterialComponents.Headline5">
-    </TextView>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_favorite_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/favorite_list_recycler"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_film" />
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/favorites_list_empty"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            android:layout_margin="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/favorite_list_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_film"/>
+    </FrameLayout>
 </FrameLayout>
