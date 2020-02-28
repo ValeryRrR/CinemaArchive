@@ -1,4 +1,4 @@
-package com.example.cinemaarchive.filmlist
+package com.example.cinemaarchive.mainfilmlist
 
 import android.content.Context
 import android.os.Bundle
@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.detailfilm.OnFilmDetailFragmentListener
 import com.example.cinemaarchive.repository.Film
@@ -17,6 +19,10 @@ import kotlinx.android.synthetic.main.main_fragment.*
 const val FILM_LIST_FRAGMENT_TAG = "FILM_LIST_FRAGMENT"
 
 class FilmListFragment : Fragment() {
+
+    private val viewModel: MainFilmListFragmentViewModel by lazy {
+        ViewModelProvider(this).get(MainFilmListFragmentViewModel::class.java)
+    }
 
     var mCallback: OnFilmDetailFragmentListener? = null
 
@@ -32,7 +38,9 @@ class FilmListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showRecyclerWithFilms(arguments?.getParcelableArrayList("filmList")!!)
+        viewModel.response.observe(viewLifecycleOwner, Observer {
+            showRecyclerWithFilms(it)
+        })
     }
 
 
@@ -56,7 +64,8 @@ class FilmListFragment : Fragment() {
                         else if (!isFavoriteChecked)
                             Database.favoriteList.remove(film)
                     }
-                })
+                },
+                context!!)
     }
 
     override fun onAttach(context: Context) {

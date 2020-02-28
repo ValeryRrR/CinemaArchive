@@ -13,12 +13,12 @@
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/buttom_navigation_view"
+        android:id="@+id/bottom_navigation_view"
         android:layout_gravity="bottom"
         app:menu="@menu/bottom_navigation_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:itemIconTint="@color/bottom_navigation_item_background_colors"
-        app:itemTextColor="@color/bottom_navigation_item_background_colors"/>
+        app:itemTextColor="@color/bottom_navigation_item_background_colors" />
 
 </LinearLayout>

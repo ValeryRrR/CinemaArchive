@@ -36,13 +36,12 @@
 
         <TextView
             android:id="@+id/film_description"
-            android:text="When the world's best spy is turned into a pigeon, he must rely on his nerdy tech officer to save the world."
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="8dp"/>
 
         <TextView
-            android:id="@+id/film_oterInformanions"
+            android:id="@+id/film_otherInformanions"
             android:text="Directors: Nick Bruno, Troy Quane"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

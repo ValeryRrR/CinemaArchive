@@ -6,19 +6,18 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.cinemaarchive.detailfilm.DetailFragment
 import com.example.cinemaarchive.detailfilm.OnFilmDetailFragmentListener
 import com.example.cinemaarchive.faforitelist.FavoriteListFragment
-import com.example.cinemaarchive.filmlist.FilmListFragment
+import com.example.cinemaarchive.mainfilmlist.FilmListFragment
 import com.example.cinemaarchive.repository.Film
 import com.example.cinemaarchive.repository.database.Database
 import kotlinx.android.synthetic.main.activity_main.*
 
 import com.example.cinemaarchive.detailfilm.FILM_DETAIL_FRAGMENT_TAG
 import com.example.cinemaarchive.detailfilm.IBottomNavOwner
-import com.example.cinemaarchive.filmlist.FILM_LIST_FRAGMENT_TAG
+import com.example.cinemaarchive.mainfilmlist.FILM_LIST_FRAGMENT_TAG
 import com.example.cinemaarchive.faforitelist.FAVORITE_LIST_FRAGMENT_TAG
 import kotlinx.android.synthetic.main.main_fragment.*
 
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
 
         if (supportFragmentManager.findFragmentById(R.id.container_fragment) == null)
-            addMainListFilmFragment(Database.items)
+            addMainListFilmFragment(/*Database.items*/)
 
         initBottomNavigation()
 
@@ -39,13 +38,13 @@ class MainActivity : AppCompatActivity(),
 
     }
 
-    private fun addMainListFilmFragment(items: ArrayList<Film>) {
+    private fun addMainListFilmFragment(/*items: ArrayList<Film>*/) {
 
-        val bundle = Bundle()
-        bundle.putParcelableArrayList("filmList", items)
+        /*val bundle = Bundle()
+        bundle.putParcelableArrayList("filmList", items)*/
 
         val filmListFragment = FilmListFragment()
-        filmListFragment.arguments = bundle
+        /*filmListFragment.arguments = bundle*/
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.container_fragment, filmListFragment, FILM_LIST_FRAGMENT_TAG)
@@ -54,14 +53,14 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun initBottomNavigation() {
-        buttom_navigation_view.setOnNavigationItemSelectedListener { item: MenuItem ->
+        bottom_navigation_view.setOnNavigationItemSelectedListener { item: MenuItem ->
             return@setOnNavigationItemSelectedListener when (item.itemId) {
                 R.id.bottom_navigation_favorite_menu -> {
                     showFavoriteFilmsList(Database.favoriteList)
                     true
                 }
                 R.id.bottom_navigation_home_menu -> {
-                    showMainListFilmFragment(Database.items)
+       //             showMainListFilmFragment(Database.items)
                     true
                 }
                 else -> false
@@ -146,6 +145,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun getBottomBar(): View {
-        return buttom_navigation_view
+        return bottom_navigation_view
     }
 }
