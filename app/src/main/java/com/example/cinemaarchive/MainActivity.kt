@@ -5,20 +5,20 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.example.cinemaarchive.detailfilm.DetailFragment
+import com.example.cinemaarchive.detailfilm.FILM_DETAIL_FRAGMENT_TAG
+import com.example.cinemaarchive.detailfilm.IBottomNavOwner
 import com.example.cinemaarchive.detailfilm.OnFilmDetailFragmentListener
+import com.example.cinemaarchive.faforitelist.FAVORITE_LIST_FRAGMENT_TAG
 import com.example.cinemaarchive.faforitelist.FavoriteListFragment
+import com.example.cinemaarchive.mainfilmlist.FILM_LIST_FRAGMENT_TAG
 import com.example.cinemaarchive.mainfilmlist.FilmListFragment
 import com.example.cinemaarchive.repository.Film
 import com.example.cinemaarchive.repository.database.Database
 import kotlinx.android.synthetic.main.activity_main.*
-
-import com.example.cinemaarchive.detailfilm.FILM_DETAIL_FRAGMENT_TAG
-import com.example.cinemaarchive.detailfilm.IBottomNavOwner
-import com.example.cinemaarchive.mainfilmlist.FILM_LIST_FRAGMENT_TAG
-import com.example.cinemaarchive.faforitelist.FAVORITE_LIST_FRAGMENT_TAG
 import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainActivity : AppCompatActivity(),

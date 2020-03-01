@@ -24,4 +24,6 @@ data class Film(
     override fun hashCode(): Int {
         return id
     }
+
+    constructor() : this(0, "", "", "", 0.0, false)
 }

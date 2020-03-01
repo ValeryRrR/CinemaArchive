@@ -44,12 +44,20 @@ class FilmListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        main_swiperefresh.setOnRefreshListener {
+            main_progress.visibility = View.VISIBLE
+            viewModel.loadMainListFilms()
+        }
+
 
 
         viewModel.responseLiveData.observe(viewLifecycleOwner, Observer {
+            main_progress.visibility = View.GONE
             showRecyclerWithFilms(it)
+            main_swiperefresh.isRefreshing = false
         })
         viewModel.responseNextPageLiveData.observe(viewLifecycleOwner, Observer {
+            (main_fragment_recycler.adapter as FilmRecyclerAdapter).removeLoadingFooter()
             (main_fragment_recycler.adapter as FilmRecyclerAdapter).addAll(it)
         })
     }
@@ -88,6 +96,10 @@ class FilmListFragment : Fragment() {
 
                 viewModel.isLoading = true
                 viewModel.currentPage += 1
+
+                if (viewModel.currentPage <= viewModel.TOTAL_PAGES)
+                    (main_fragment_recycler.adapter as FilmRecyclerAdapter).addLoadingFooter()
+                else viewModel.isLastPage = true
 
                 viewModel.loadNextPage()
             }
