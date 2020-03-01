@@ -13,6 +13,7 @@ import com.example.cinemaarchive.detailfilm.OnFilmDetailFragmentListener
 import com.example.cinemaarchive.repository.Film
 import com.example.cinemaarchive.repository.FilmRecyclerAdapter
 import com.example.cinemaarchive.repository.database.Database
+import com.example.cinemaarchive.utils.PaginationScrollListener
 import kotlinx.android.synthetic.main.main_fragment.*
 
 
@@ -26,6 +27,11 @@ class FilmListFragment : Fragment() {
 
     var mCallback: OnFilmDetailFragmentListener? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,8 +44,13 @@ class FilmListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.response.observe(viewLifecycleOwner, Observer {
+
+
+        viewModel.responseLiveData.observe(viewLifecycleOwner, Observer {
             showRecyclerWithFilms(it)
+        })
+        viewModel.responseNextPageLiveData.observe(viewLifecycleOwner, Observer {
+            (main_fragment_recycler.adapter as FilmRecyclerAdapter).addAll(it)
         })
     }
 
@@ -57,7 +68,11 @@ class FilmListFragment : Fragment() {
                 },
                 object :
                     FilmRecyclerAdapter.OnLikeClickListener {
-                    override fun onLikeClicked(film: Film, position: Int, isFavoriteChecked: Boolean) {
+                    override fun onLikeClicked(
+                        film: Film,
+                        position: Int,
+                        isFavoriteChecked: Boolean
+                    ) {
                         film.isFavorite = isFavoriteChecked
                         if (isFavoriteChecked)
                             Database.favoriteList.add(film)
@@ -65,7 +80,30 @@ class FilmListFragment : Fragment() {
                             Database.favoriteList.remove(film)
                     }
                 },
-                context!!)
+                context!!
+            )
+        main_fragment_recycler.addOnScrollListener(object :
+            PaginationScrollListener(main_fragment_recycler.layoutManager!!) {
+            override fun loadMoreItems() {
+
+                viewModel.isLoading = true
+                viewModel.currentPage += 1
+
+                viewModel.loadNextPage()
+            }
+
+            override fun getTotalPageCount(): Int {
+                return viewModel.TOTAL_PAGES
+            }
+
+            override fun isLastPage(): Boolean {
+                return viewModel.isLastPage
+            }
+
+            override fun isLoading(): Boolean {
+                return viewModel.isLoading
+            }
+        })
     }
 
     override fun onAttach(context: Context) {

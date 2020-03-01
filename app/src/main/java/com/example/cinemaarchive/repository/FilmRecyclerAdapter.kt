@@ -5,15 +5,16 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinemaarchive.R
+import com.example.cinemaarchive.network.BASE_URL_IMG
 import com.example.cinemaarchive.network.GlideApp
 import com.example.cinemaarchive.network.GlideRequest
+import com.example.cinemaarchive.network.loadImage
 import com.example.cinemaarchive.repository.database.Database
+import com.example.cinemaarchive.repository.database.Database.favoriteList
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.item_film.view.*
 
 
 class FilmRecyclerAdapter(
@@ -24,8 +25,10 @@ class FilmRecyclerAdapter(
     private val context: Context
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val BASE_URL_IMG = "https://image.tmdb.org/t/p/w200"
-    private val filmList: List<Film>? = null
+    init {
+        for (film in items)
+            markFavorites(film)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return FilmViewHolder(
@@ -42,14 +45,7 @@ class FilmRecyclerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as FilmViewHolder).bind(items[position], itemClickListener, likeClickListener)
 
-        loadImage(items[position].filmPoster)?.into(holder.filmPosterIv)
-    }
-
-    private fun loadImage(@NonNull posterPath: String): GlideRequest<Drawable?>? {
-        return GlideApp
-            .with(context)
-            .load(BASE_URL_IMG + posterPath)
-            .centerCrop()
+        loadImage(items[position].filmPoster, context)?.into(holder.filmPosterIv)
     }
 
      fun onItemRemove(
@@ -77,6 +73,27 @@ class FilmRecyclerAdapter(
 
     interface OnLikeClickListener {
         fun onLikeClicked(film: Film, position: Int, isFavoriteChecked: Boolean)
+    }
+
+    private fun markFavorites(film: Film){
+        if (favoriteList.contains(film))
+            film.isFavorite = true
+    }
+
+    /*
+        Helpers - Pagination
+   ___________________________________________________________________________________________
+    */
+    fun addAll(list: List<Film>) {
+        for (film in list) {
+            add(film)
+        }
+    }
+
+    fun add(item: Film) {
+        markFavorites(item)
+        (items as ArrayList<Film>).add(item)
+        notifyItemInserted(items.size - 1)
     }
 }
 

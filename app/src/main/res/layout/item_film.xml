@@ -43,10 +43,10 @@
         <TextView
             android:id="@+id/vote_average"
             style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="24dp"
+            android:layout_width="wrap_content"
             android:layout_height="24dp"
-            android:textSize="18sp"
             android:gravity="bottom"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/image_star"
             app:layout_constraintStart_toEndOf="@+id/image_star" />
 

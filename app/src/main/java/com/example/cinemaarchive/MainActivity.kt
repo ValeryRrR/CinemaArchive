@@ -25,6 +25,14 @@ class MainActivity : AppCompatActivity(),
     OnFilmDetailFragmentListener,
     IBottomNavOwner{
 
+    val filmListFragment: FilmListFragment
+    val favoriteListFragment: FavoriteListFragment
+
+    init {
+        filmListFragment = FilmListFragment()
+        favoriteListFragment = FavoriteListFragment()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -38,13 +46,7 @@ class MainActivity : AppCompatActivity(),
 
     }
 
-    private fun addMainListFilmFragment(/*items: ArrayList<Film>*/) {
-
-        /*val bundle = Bundle()
-        bundle.putParcelableArrayList("filmList", items)*/
-
-        val filmListFragment = FilmListFragment()
-        /*filmListFragment.arguments = bundle*/
+    private fun addMainListFilmFragment() {
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.container_fragment, filmListFragment, FILM_LIST_FRAGMENT_TAG)
@@ -60,7 +62,7 @@ class MainActivity : AppCompatActivity(),
                     true
                 }
                 R.id.bottom_navigation_home_menu -> {
-       //             showMainListFilmFragment(Database.items)
+                    showMainListFilmFragment()
                     true
                 }
                 else -> false
@@ -97,27 +99,20 @@ class MainActivity : AppCompatActivity(),
             val bundle = Bundle()
             bundle.putParcelableArrayList("favoriteList", items)
 
-            val fragobj = FavoriteListFragment()
-            fragobj.arguments = bundle
+
+            favoriteListFragment.arguments = bundle
 
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container_fragment, fragobj, FAVORITE_LIST_FRAGMENT_TAG)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.container_fragment, favoriteListFragment, FAVORITE_LIST_FRAGMENT_TAG)
                 .commit()
         }
     }
 
-    private fun showMainListFilmFragment(items: ArrayList<Film>) {
+    private fun showMainListFilmFragment() {
         if (supportFragmentManager.findFragmentByTag(FILM_LIST_FRAGMENT_TAG) == null) {
-            val bundle = Bundle()
-            bundle.putParcelableArrayList("filmList", items)
-
-            val filmListFragment = FilmListFragment()
-            filmListFragment.arguments = bundle
 
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container_fragment, filmListFragment, FILM_LIST_FRAGMENT_TAG)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit()
         }
     }

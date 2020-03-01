@@ -13,4 +13,15 @@ data class Film(
     @SerializedName("overview") var description: String,
     @SerializedName("vote_average") var voteAverage: Double,
     var isFavorite: Boolean
-    ): Parcelable
+    ): Parcelable{
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is Film)
+            this.id == other.id
+        else other == this
+    }
+
+    override fun hashCode(): Int {
+        return id
+    }
+}
