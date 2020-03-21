@@ -10,7 +10,7 @@
     <string name="comment">Comment</string>
     <string name="ic_share">Share</string>
     <string name="Invite_friends">Invite friends</string>
-    <string name="favorite">Favorite</string>
+    <string name="favorite">Favorites</string>
     <string name="home">Home</string>
     <string name="favorites_list_empty">Favorites list empty</string>
     <string name="cancel">Cancel</string>
@@ -23,5 +23,6 @@
     <string name="undo">Undo</string>
     <string name="remove_from_favorite">Removed from favorite</string>
     <string name="description">Description</string>
+    <string name="language">ru-RU</string>
 
 </resources>

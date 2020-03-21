@@ -11,6 +11,7 @@ import com.example.cinemaarchive.detailfilm.OnFilmDetailFragmentListener
 import com.example.cinemaarchive.repository.Film
 import com.example.cinemaarchive.repository.FilmRecyclerAdapter
 import com.example.cinemaarchive.repository.database.Database
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.favarite_list_fragment.*
 
 const val FAVORITE_LIST_FRAGMENT_TAG = "FAVORITE_LIST_FRAGMENT"
@@ -19,6 +20,11 @@ const val FAVORITE_LIST_FRAGMENT_TAG = "FAVORITE_LIST_FRAGMENT"
 class FavoriteListFragment : Fragment() {
 
     var mCallback: OnFilmDetailFragmentListener? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,7 +67,8 @@ class FavoriteListFragment : Fragment() {
                             (favorite_list_recycler.adapter as FilmRecyclerAdapter).onItemRemove(position,film, favorite_list_recycler)
                         }
                     }
-                })
+                },
+                context!!)
     }
 
     override fun onAttach(context: Context) {

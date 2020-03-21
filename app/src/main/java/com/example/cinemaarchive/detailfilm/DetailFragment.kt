@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.example.cinemaarchive.R
+import com.example.cinemaarchive.network.loadImage
 import com.example.cinemaarchive.repository.Film
 import kotlinx.android.synthetic.main.main_fragment.*
 import kotlinx.android.synthetic.main.detail_fragment.*
@@ -35,26 +36,13 @@ class DetailFragment : Fragment() {
         val film: Film = arguments?.getParcelable("filmDetail")!!
 
         fillFilmInformation(film)
-        setListeners(film)
     }
 
     private fun fillFilmInformation(film: Film) {
-        image_view_poster_collapsing.setImageResource(film.filmPoster)
-        image_view_poster.setImageResource(film.filmPoster)
+        loadImage(film.filmPoster, context!!)?.into(image_view_poster_collapsing)//image_view_poster_collapsing.setImageResource(film.filmPoster)
+        loadImage(film.filmPoster, context!!)?.into(image_view_poster)//image_view_poster.setImageResource(film.filmPoster)
         film_name.text = film.name
-        editText_comment.setText(film.comment)
-    }
-
-    private fun setListeners(film: Film) {
-
-        editText_comment.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                film.comment = s.toString()
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
+        film_description.text = film.description
     }
 
 
@@ -65,8 +53,8 @@ class DetailFragment : Fragment() {
         iBottomNavOwner?.getBottomBar()?.visibility = View.GONE
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onPause() {
+        super.onPause()
         iBottomNavOwner?.getBottomBar()?.visibility = View.VISIBLE
     }
 
