@@ -1,8 +1,6 @@
-package com.example.cinemaarchive.repository.database
+package com.example.cinemaarchive.data.database
 
-import com.example.cinemaarchive.R
-import com.example.cinemaarchive.network.FilmApi
-import com.example.cinemaarchive.repository.Film
+import com.example.cinemaarchive.data.entity.Film
 
 object Database{
     val favoriteList = ArrayList<Film>()

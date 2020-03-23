@@ -1,11 +1,10 @@
-package com.example.cinemaarchive.network
+package com.example.cinemaarchive.data.network
 
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import androidx.annotation.NonNull
 import com.example.cinemaarchive.R
-import com.example.cinemaarchive.network.GlideOptions.bitmapTransform
+import com.example.cinemaarchive.data.network.GlideOptions.bitmapTransform
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -48,10 +47,18 @@ object FilmApi {
     }
 }
 
-fun loadImage(@NonNull posterPath: String, context: Context): GlideRequest<Drawable?>? {
+fun loadImage(posterPath: String?, context: Context): GlideRequest<Drawable?>? {
     return GlideApp
         .with(context)
-        .load(BASE_URL_IMG + posterPath)
+        .load(getImageURL(posterPath))
+        .fallback(R.drawable.gradient)
         .centerCrop()
+}
+
+private fun getImageURL(posterPath: String?): String?{
+    if (posterPath == null){
+        return null
+    }
+    return BASE_URL_IMG + posterPath
 }
 

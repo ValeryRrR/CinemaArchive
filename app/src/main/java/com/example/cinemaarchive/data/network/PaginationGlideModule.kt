@@ -1,4 +1,4 @@
-package com.example.cinemaarchive.network
+package com.example.cinemaarchive.data.network
 
 import android.content.Context
 import androidx.annotation.NonNull

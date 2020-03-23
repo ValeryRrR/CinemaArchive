@@ -1,4 +1,4 @@
-package com.example.cinemaarchive.faforitelist
+package com.example.cinemaarchive.presentation.view
 
 import android.content.Context
 import android.os.Bundle
@@ -7,11 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.cinemaarchive.R
-import com.example.cinemaarchive.detailfilm.OnFilmDetailFragmentListener
-import com.example.cinemaarchive.repository.Film
-import com.example.cinemaarchive.repository.FilmRecyclerAdapter
-import com.example.cinemaarchive.repository.database.Database
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.cinemaarchive.presentation.view.detailfilm.OnFilmDetailFragmentListener
+import com.example.cinemaarchive.data.entity.Film
+import com.example.cinemaarchive.presentation.recycler.FilmRecyclerAdapter
+import com.example.cinemaarchive.data.database.Database
 import kotlinx.android.synthetic.main.favarite_list_fragment.*
 
 const val FAVORITE_LIST_FRAGMENT_TAG = "FAVORITE_LIST_FRAGMENT"
@@ -40,35 +39,33 @@ class FavoriteListFragment : Fragment() {
         val favoriteList: List<Film>? = arguments?.getParcelableArrayList("favoriteList")
 
         if (favoriteList == null || favoriteList.isEmpty())
-            favorites_list_empty.text = getString(R.string.favorites_list_empty)
+            favoritesListEmpty.text = getString(R.string.favoritesListEmpty)
         else showRecyclerWithFilms(favoriteList)
     }
 
-
     private fun showRecyclerWithFilms(items: List<Film>) {
 
-        favorite_list_recycler.adapter =
+        favoriteListRecycler.adapter =
             FilmRecyclerAdapter(
-                LayoutInflater.from(favorite_list_recycler.context),
+                LayoutInflater.from(favoriteListRecycler.context),
                 items,
-                object :
-                    FilmRecyclerAdapter.OnItemClickListener {
-                    override fun onItemClicked(film: Film) {
-                        mCallback?.onOpenDetailFragment(film)
-                    }
-                },
-                object :
-                    FilmRecyclerAdapter.OnLikeClickListener {
-                    override fun onLikeClicked(film: Film, position: Int, isFavoriteChecked: Boolean) {
+                { mCallback?.onOpenDetailFragment(it) },
+                { film: Film, position: Int, isFavoriteChecked: Boolean ->
+                    run {
                         film.isFavorite = isFavoriteChecked
                         if (!isFavoriteChecked) {
                             Database.favoriteList.remove(film)
-                            favorite_list_recycler.adapter?.notifyItemRemoved(position)
-                            (favorite_list_recycler.adapter as FilmRecyclerAdapter).onItemRemove(position,film, favorite_list_recycler)
+                            favoriteListRecycler.adapter?.notifyItemRemoved(position)
+                            (favoriteListRecycler.adapter as FilmRecyclerAdapter).onItemRemove(
+                                position,
+                                film,
+                                favoriteListRecycler
+                            )
                         }
                     }
                 },
-                context!!)
+                context!!
+            )
     }
 
     override fun onAttach(context: Context) {

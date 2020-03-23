@@ -1,21 +1,20 @@
-package com.example.cinemaarchive.mainfilmlist
+package com.example.cinemaarchive.presentation.viewModel
 
 import android.util.Log
-import android.view.View
-import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.cinemaarchive.network.API_KEY
-import com.example.cinemaarchive.network.FilmApi
-import com.example.cinemaarchive.network.RU_LANG
-import com.example.cinemaarchive.network.ResponseDataClass
-import com.example.cinemaarchive.repository.Film
+import com.example.cinemaarchive.data.network.API_KEY
+import com.example.cinemaarchive.data.network.FilmApi
+import com.example.cinemaarchive.data.network.RU_LANG
+import com.example.cinemaarchive.data.network.ResponseDataClass
+import com.example.cinemaarchive.data.entity.Film
+import com.example.cinemaarchive.data.database.Database
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainFilmListFragmentViewModel: ViewModel() {
+class MainListViewModel: ViewModel() {
 
      val PAGE_START = 1
      var TOTAL_PAGES = 50
@@ -29,9 +28,9 @@ class MainFilmListFragmentViewModel: ViewModel() {
     val responseLiveData: LiveData<List<Film>>
         get() = _responseMutableLiveData
 
-    private val _responseNextPageMutableLiveData = MutableLiveData<List<Film>>()
+    private val _responseNextPageMutableLiveData = MutableLiveData<ArrayList<Film>>()
 
-    val responseNextPageLiveData: LiveData<List<Film>>
+    val responseNextPageLiveData: LiveData<ArrayList<Film>>
         get() = _responseNextPageMutableLiveData
 
     init {
@@ -44,8 +43,6 @@ class MainFilmListFragmentViewModel: ViewModel() {
                 Log.i( "Failure enqueue: ", t.message)
             }
 
-            //en-US
-
             override fun onResponse(call: Call<ResponseDataClass>, response: Response<ResponseDataClass>) {
                 _responseMutableLiveData.value = response.body()?.results
             }
@@ -53,15 +50,35 @@ class MainFilmListFragmentViewModel: ViewModel() {
     }
 
     fun loadNextPage(){
+        isLoading = true
+        currentPage += 1
+
         FilmApi.retrofitService.listFilms(API_KEY, RU_LANG, currentPage).enqueue(object: Callback<ResponseDataClass> {
             override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
                 Log.i( "Failure loadNextPage: ", t.message)
             }
 
             override fun onResponse(call: Call<ResponseDataClass>, response: Response<ResponseDataClass>) {
-                _responseNextPageMutableLiveData.value = response.body()?.results
+                _responseNextPageMutableLiveData.value = response.body()?.results as ArrayList<Film>
+                //_responseNextPageMutableLiveData += response.body()!!.results TODO save all list in LiveData
                 isLoading = false
             }
         })
     }
+
+    fun updateFavoriteList(film: Film, isFavorite: Boolean){
+        film.isFavorite = isFavorite
+        if (isFavorite)
+            Database.favoriteList.add(film)
+        else if (!isFavorite)
+            Database.favoriteList.remove(film)
+    }
+}
+    /**
+    * Operator adding items in MutableLiveList like mutableLiveDataList += newMutableLiveDataList.
+    */
+private operator fun <T> MutableLiveData<ArrayList<T>>.plusAssign(values: List<T>) {
+    val value = this.value ?: arrayListOf()
+    value.addAll(values)
+    this.value = value
 }

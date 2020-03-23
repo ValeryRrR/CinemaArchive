@@ -1,13 +1,11 @@
-package com.example.cinemaarchive.repository
+package com.example.cinemaarchive.presentation.recycler.holders
 
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cinemaarchive.R
-import com.example.cinemaarchive.repository.Film
-import com.example.cinemaarchive.repository.FilmRecyclerAdapter
+import com.example.cinemaarchive.data.entity.Film
 import kotlinx.android.synthetic.main.item_film.view.*
 
 class FilmViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -20,8 +18,8 @@ class FilmViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
     fun bind(
         item: Film,
-        itemClickListener: FilmRecyclerAdapter.OnItemClickListener,
-        likeClickListener: FilmRecyclerAdapter.OnLikeClickListener
+        itemClickListener: (film: Film) -> Unit,
+        likeClickListener: (film: Film, position: Int, isFavoriteChecked: Boolean) -> Unit
     ){
       //  filmPosterIv.setImageResource(item.filmPoster)
         nameTv.text = item.name
@@ -30,10 +28,10 @@ class FilmViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         voteAverage.text = item.voteAverage.toString()
 
         itemView.setOnClickListener {
-            itemClickListener.onItemClicked(item)
+            itemClickListener(item)
         }
         favoriteTbtn.setOnClickListener{
-            likeClickListener.onLikeClicked(item, adapterPosition, favoriteTbtn.isChecked)
+            likeClickListener(item, adapterPosition, favoriteTbtn.isChecked)
         }
     }
 

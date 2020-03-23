@@ -14,7 +14,7 @@
     <string name="detail">Детали</string>
     <string name="similar">Похожие</string>
     <string name="favorite">Избранное</string>
-    <string name="favorites_list_empty">Список избранного пуст</string>
+    <string name="favoritesListEmpty">Список избранного пуст</string>
     <string name="film_1">Фильм 1</string>
     <string name="film_2_album">Фильм 2 албом</string>
     <string name="home">Главная</string>

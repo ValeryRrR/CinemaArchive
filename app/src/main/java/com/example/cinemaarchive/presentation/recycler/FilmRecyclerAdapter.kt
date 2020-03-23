@@ -1,4 +1,4 @@
-package com.example.cinemaarchive.repository
+package com.example.cinemaarchive.presentation.recycler
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,9 +7,11 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinemaarchive.R
-import com.example.cinemaarchive.network.loadImage
-import com.example.cinemaarchive.repository.database.Database
-import com.example.cinemaarchive.repository.database.Database.favoriteList
+import com.example.cinemaarchive.data.network.loadImage
+import com.example.cinemaarchive.data.entity.Film
+import com.example.cinemaarchive.presentation.recycler.holders.FilmViewHolder
+import com.example.cinemaarchive.presentation.recycler.holders.LoadingViewHolder
+import com.example.cinemaarchive.data.database.Database.favoriteList
 import com.google.android.material.snackbar.Snackbar
 
 private const val ITEM = 0
@@ -18,8 +20,8 @@ private const val LOADING = 1
 class FilmRecyclerAdapter(
     private val inflater: LayoutInflater,
     private val items: List<Film>,
-    private val itemClickListener: OnItemClickListener,
-    private val likeClickListener: OnLikeClickListener,
+    private val itemClickListener: (film: Film) -> Unit,
+    private val likeClickListener: (film: Film, position: Int, isFavoriteChecked: Boolean) -> Unit,
     private val context: Context
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -75,7 +77,7 @@ class FilmRecyclerAdapter(
         film: Film,
         view: View
     ) {
-        val snackbar: Snackbar = Snackbar
+        val snackBar: Snackbar = Snackbar
             .make(
                 view,
                 R.string.remove_from_favorite,
@@ -83,18 +85,10 @@ class FilmRecyclerAdapter(
             )
             .setAction(R.string.undo) {
                 film.isFavorite = true
-                Database.favoriteList.add(mAdapterPosition, film)
+                favoriteList.add(mAdapterPosition, film)
                 notifyItemInserted(mAdapterPosition)
             }
-        snackbar.show()
-    }
-
-    interface OnItemClickListener {
-        fun onItemClicked(film: Film)
-    }
-
-    interface OnLikeClickListener {
-        fun onLikeClicked(film: Film, position: Int, isFavoriteChecked: Boolean)
+        snackBar.show()
     }
 
     private fun markFavorites(film: Film){

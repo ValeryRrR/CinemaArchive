@@ -1,4 +1,4 @@
-package com.example.cinemaarchive.repository
+package com.example.cinemaarchive.presentation.recycler.holders
 
 import android.view.View
 import android.widget.ProgressBar

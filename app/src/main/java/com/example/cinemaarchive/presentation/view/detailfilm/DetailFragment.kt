@@ -1,18 +1,15 @@
-package com.example.cinemaarchive.detailfilm
+package com.example.cinemaarchive.presentation.view.detailfilm
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.example.cinemaarchive.R
-import com.example.cinemaarchive.network.loadImage
-import com.example.cinemaarchive.repository.Film
-import kotlinx.android.synthetic.main.main_fragment.*
+import com.example.cinemaarchive.data.network.loadImage
+import com.example.cinemaarchive.data.entity.Film
+import com.example.cinemaarchive.presentation.view.detailfilm.IBottomNavOwner
 import kotlinx.android.synthetic.main.detail_fragment.*
 import kotlinx.android.synthetic.main.detail_fragment_collapsing.*
 
