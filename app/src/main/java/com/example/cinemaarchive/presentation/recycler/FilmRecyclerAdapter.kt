@@ -5,24 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinemaarchive.R
-import com.example.cinemaarchive.data.network.loadImage
+import com.example.cinemaarchive.data.database.Database.favoriteList
 import com.example.cinemaarchive.data.entity.Film
+import com.example.cinemaarchive.data.network.loadImage
 import com.example.cinemaarchive.presentation.recycler.holders.FilmViewHolder
 import com.example.cinemaarchive.presentation.recycler.holders.LoadingViewHolder
-import com.example.cinemaarchive.data.database.Database.favoriteList
 import com.google.android.material.snackbar.Snackbar
+
 
 private const val ITEM = 0
 private const val LOADING = 1
 
 class FilmRecyclerAdapter(
-    private val inflater: LayoutInflater,
-    private val items: List<Film>,
+    private var items: List<Film>,
     private val itemClickListener: (film: Film) -> Unit,
-    private val likeClickListener: (film: Film, position: Int, isFavoriteChecked: Boolean) -> Unit,
-    private val context: Context
+    private val likeClickListener: (film: Film, position: Int, isFavoriteChecked: Boolean) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var isLoadingFooterAdded = false
@@ -37,12 +37,12 @@ class FilmRecyclerAdapter(
         when (viewType) {
             ITEM -> {
                 val viewItem: View =
-                    inflater.inflate(R.layout.item_film, parent, false)
+                    LayoutInflater.from(parent.context).inflate(R.layout.item_film, parent, false)
                 viewHolder = FilmViewHolder(viewItem)
             }
             LOADING -> {
                 val viewLoading: View =
-                    inflater.inflate(R.layout.item_loading, parent, false)
+                    LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false)
                 viewHolder = LoadingViewHolder(viewLoading)
             }
         }
@@ -60,18 +60,16 @@ class FilmRecyclerAdapter(
                     itemClickListener,
                     likeClickListener
                 )
-                loadImage(items[position].filmPoster, context)?.into(holder.filmPosterIv)
+                loadImage(items[position].filmPoster, holder.filmPosterIv.context)?.into(holder.filmPosterIv)
             }
             LOADING -> {
                 (holder as LoadingViewHolder).mProgressBar.visibility = VISIBLE
             }
 
         }
-
-
-
     }
-//TODO move snackBar above the bottomNavigation
+
+     //TODO move snackBar above the bottomNavigation
      fun onItemRemove(
         mAdapterPosition: Int,
         film: Film,
@@ -104,33 +102,23 @@ class FilmRecyclerAdapter(
         Helpers - Footer
    ___________________________________________________________________________________________
     */
-    fun addLoadingFooter(): Unit {
+    private var footerPosition = items.size
+    fun addLoadingFooter() {
+        footerPosition = items.size
         isLoadingFooterAdded = true
-        add(Film())
+        (items as ArrayList<Film>).add(Film())
+        notifyItemInserted(footerPosition)
     }
 
     fun removeLoadingFooter() {
         isLoadingFooterAdded = false
-        val position: Int = items.size - 1
-        (items as ArrayList<Film>).removeAt(position)
-        notifyItemRemoved(position)
+        (items as ArrayList<Film>).removeAt(footerPosition)
+        notifyItemRemoved(footerPosition)
     }
 
-
-    /*
-        Helpers - Pagination
-   ___________________________________________________________________________________________
-    */
-    fun addAll(list: List<Film>) {
-        for (film in list) {
-            add(film)
-        }
-    }
-
-    fun add(item: Film) {
-        markFavorites(item)
-        (items as ArrayList<Film>).add(item)
-        notifyItemInserted(items.size - 1)
+    fun updateList(newList: ArrayList<Film>) {
+        items = newList
+        notifyDataSetChanged()
     }
 }
 

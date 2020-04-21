@@ -4,7 +4,6 @@ package com.example.cinemaarchive.data.network
 import android.content.Context
 import android.graphics.drawable.Drawable
 import com.example.cinemaarchive.R
-import com.example.cinemaarchive.data.network.GlideOptions.bitmapTransform
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -12,7 +11,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 
-private const val BASE_URL = "https://api.themoviedb.org/3/"
+const val BASE_URL = "https://api.themoviedb.org/3/"
 
 /**
  *w300 - image size, supported other "w500", "w780", "w1280", "original"
@@ -27,7 +26,7 @@ const val RU_LANG = "ru-RU"
 //TODO move api_key, language, image size to interceptor
 interface ThemoviedbService {
     @GET("discover/movie")
-    fun listFilms(
+    fun getListFilms(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("page") pageIndex: Int
@@ -39,8 +38,6 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .build()
 
-
-// TODO create mapper for data class
 object FilmApi {
     val retrofitService: ThemoviedbService by lazy {
         retrofit.create(ThemoviedbService::class.java)

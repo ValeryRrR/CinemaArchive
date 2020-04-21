@@ -47,7 +47,6 @@ class FavoriteListFragment : Fragment() {
 
         favoriteListRecycler.adapter =
             FilmRecyclerAdapter(
-                LayoutInflater.from(favoriteListRecycler.context),
                 items,
                 { mCallback?.onOpenDetailFragment(it) },
                 { film: Film, position: Int, isFavoriteChecked: Boolean ->
@@ -63,8 +62,7 @@ class FavoriteListFragment : Fragment() {
                             )
                         }
                     }
-                },
-                context!!
+                }
             )
     }
 

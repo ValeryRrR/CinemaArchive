@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.cinemaarchive.App
 import com.example.cinemaarchive.data.network.API_KEY
 import com.example.cinemaarchive.data.network.FilmApi
 import com.example.cinemaarchive.data.network.RU_LANG
@@ -23,45 +24,44 @@ class MainListViewModel: ViewModel() {
      var isLoading = false
      var isLastPage = false
 
-    private val _responseMutableLiveData = MutableLiveData<List<Film>>()
-
-    val responseLiveData: LiveData<List<Film>>
+//    private val movieInteractor = App.instance!!.movieInteractor
+    private val _responseMutableLiveData = MutableLiveData<ArrayList<Film>>()
+    val responseLiveData: LiveData<ArrayList<Film>>
         get() = _responseMutableLiveData
 
-    private val _responseNextPageMutableLiveData = MutableLiveData<ArrayList<Film>>()
 
-    val responseNextPageLiveData: LiveData<ArrayList<Film>>
-        get() = _responseNextPageMutableLiveData
 
     init {
-        loadMainListFilms()
+        loadFistList()
     }
 
-     fun loadMainListFilms() {
-        FilmApi.retrofitService.listFilms(API_KEY, RU_LANG, PAGE_START).enqueue(object: Callback<ResponseDataClass> {
+     fun loadNextPage() {
+         isLoading = true
+
+        FilmApi.retrofitService.getListFilms(API_KEY, RU_LANG, currentPage).enqueue(object: Callback<ResponseDataClass> {
             override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
                 Log.i( "Failure enqueue: ", t.message)
             }
 
             override fun onResponse(call: Call<ResponseDataClass>, response: Response<ResponseDataClass>) {
-                _responseMutableLiveData.value = response.body()?.results
+                _responseMutableLiveData += response.body()!!.results
+                currentPage += 1
+                isLoading = false
             }
         })
     }
 
-    fun loadNextPage(){
-        isLoading = true
-        currentPage += 1
+    fun loadFistList(){
 
-        FilmApi.retrofitService.listFilms(API_KEY, RU_LANG, currentPage).enqueue(object: Callback<ResponseDataClass> {
+        FilmApi.retrofitService.getListFilms(API_KEY, RU_LANG, PAGE_START).enqueue(object: Callback<ResponseDataClass> {
             override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
                 Log.i( "Failure loadNextPage: ", t.message)
             }
 
             override fun onResponse(call: Call<ResponseDataClass>, response: Response<ResponseDataClass>) {
-                _responseNextPageMutableLiveData.value = response.body()?.results as ArrayList<Film>
-                //_responseNextPageMutableLiveData += response.body()!!.results TODO save all list in LiveData
-                isLoading = false
+                _responseMutableLiveData.setValue(response.body()!!.results as ArrayList<Film>)
+
+                currentPage += 1
             }
         })
     }

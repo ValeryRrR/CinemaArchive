@@ -27,6 +27,11 @@ class FilmListFragment : Fragment() {
         ViewModelProvider(this).get(MainListViewModel::class.java)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,31 +43,30 @@ class FilmListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initRecycler(ArrayList())
+
         mainSwiperefresh.setOnRefreshListener {
             main_progress.visibility = View.VISIBLE
-            viewModel.loadMainListFilms()
+            viewModel.loadFistList()
         }
         viewModel.responseLiveData.observe(viewLifecycleOwner, Observer {
             main_progress.visibility = View.GONE
-            showRecyclerWithFilms(it)
+            if(viewModel.isLoading)
+              filmRecyclerAdapter.removeLoadingFooter()
+            filmRecyclerAdapter.updateList(it)
+
             mainSwiperefresh.isRefreshing = false
-        })
-        viewModel.responseNextPageLiveData.observe(viewLifecycleOwner, Observer {
-            filmRecyclerAdapter.removeLoadingFooter()
-            filmRecyclerAdapter.addAll(it)
         })
     }
 
-    private fun showRecyclerWithFilms(items: List<Film>) {
+    private fun initRecycler(items: List<Film>) {
         filmRecyclerAdapter =
             FilmRecyclerAdapter(
-                LayoutInflater.from(mainFragmentRecycler.context),
                 items,
                 { mCallback.onOpenDetailFragment(it) },
                 { film: Film, position: Int, isFavoriteChecked: Boolean ->
                     viewModel.updateFavoriteList(film, isFavoriteChecked)
-                },
-                mainFragmentRecycler.context
+                }
             )
         mainFragmentRecycler.adapter = filmRecyclerAdapter
 
@@ -70,7 +74,7 @@ class FilmListFragment : Fragment() {
             PaginationScrollListener(mainFragmentRecycler.layoutManager!!) {
             override fun loadMoreItems() {
                 if (viewModel.currentPage <= viewModel.TOTAL_PAGES)
-                    filmRecyclerAdapter.addLoadingFooter()
+                filmRecyclerAdapter.addLoadingFooter()
                 else viewModel.isLastPage = true
 
                 viewModel.loadNextPage()

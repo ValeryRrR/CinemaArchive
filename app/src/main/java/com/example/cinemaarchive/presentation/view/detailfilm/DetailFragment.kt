@@ -36,8 +36,8 @@ class DetailFragment : Fragment() {
     }
 
     private fun fillFilmInformation(film: Film) {
-        loadImage(film.filmPoster, context!!)?.into(image_view_poster_collapsing)//image_view_poster_collapsing.setImageResource(film.filmPoster)
-        loadImage(film.filmPoster, context!!)?.into(image_view_poster)//image_view_poster.setImageResource(film.filmPoster)
+        loadImage(film.filmPoster, image_view_poster_collapsing.context)?.into(image_view_poster_collapsing)//image_view_poster_collapsing.setImageResource(film.filmPoster)
+        loadImage(film.filmPoster, image_view_poster.context)?.into(image_view_poster)//image_view_poster.setImageResource(film.filmPoster)
         film_name.text = film.name
         film_description.text = film.description
     }

@@ -1,4 +1,4 @@
-package com.example.cinemaarchive.presentation
+package com.example.cinemaarchive.presentation.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,10 +12,6 @@ import com.example.cinemaarchive.presentation.view.detailfilm.DetailFragment
 import com.example.cinemaarchive.presentation.view.detailfilm.FILM_DETAIL_FRAGMENT_TAG
 import com.example.cinemaarchive.presentation.view.detailfilm.IBottomNavOwner
 import com.example.cinemaarchive.presentation.view.detailfilm.OnFilmDetailFragmentListener
-import com.example.cinemaarchive.presentation.view.FAVORITE_LIST_FRAGMENT_TAG
-import com.example.cinemaarchive.presentation.view.FavoriteListFragment
-import com.example.cinemaarchive.presentation.view.FILM_LIST_FRAGMENT_TAG
-import com.example.cinemaarchive.presentation.view.FilmListFragment
 import com.example.cinemaarchive.data.entity.Film
 import com.example.cinemaarchive.data.database.Database
 import kotlinx.android.synthetic.main.activity_main.*
@@ -100,7 +96,6 @@ class MainActivity : AppCompatActivity(),
         if (supportFragmentManager.findFragmentByTag(FAVORITE_LIST_FRAGMENT_TAG) == null) {
             val bundle = Bundle()
             bundle.putParcelableArrayList("favoriteList", items)
-
 
             favoriteListFragment.arguments = bundle
 
