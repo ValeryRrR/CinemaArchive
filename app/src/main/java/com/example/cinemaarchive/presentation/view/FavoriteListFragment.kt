@@ -13,8 +13,6 @@ import com.example.cinemaarchive.presentation.recycler.FilmRecyclerAdapter
 import com.example.cinemaarchive.data.database.Database
 import kotlinx.android.synthetic.main.favarite_list_fragment.*
 
-const val FAVORITE_LIST_FRAGMENT_TAG = "FAVORITE_LIST_FRAGMENT"
-
 
 class FavoriteListFragment : Fragment() {
 
@@ -36,7 +34,7 @@ class FavoriteListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val favoriteList: List<Film>? = arguments?.getParcelableArrayList("favoriteList")
+        val favoriteList: List<Film>? = Database.favoriteList //TODO fix update
 
         if (favoriteList == null || favoriteList.isEmpty())
             favoritesListEmpty.text = getString(R.string.favoritesListEmpty)

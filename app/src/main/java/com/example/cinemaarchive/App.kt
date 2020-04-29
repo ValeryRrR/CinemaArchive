@@ -1,36 +1,35 @@
 package com.example.cinemaarchive
 
 import android.app.Application
-import com.example.cinemaarchive.data.network.BASE_URL
-import com.example.cinemaarchive.data.network.ThemoviedbService
-import com.example.cinemaarchive.data.repository.MovieRepository
-import com.example.cinemaarchive.domain.MovieInteractor
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.cinemaarchive.data.network.TheMovieDBmApi
+import com.example.cinemaarchive.data.network.TheMovieDBService
+import com.example.cinemaarchive.data.repository.MovieRepositoryImp
+import com.example.cinemaarchive.domain.usecase.GetFilmsUseCase
 
 class App: Application() {
-    lateinit var themoviedbService: ThemoviedbService
-    lateinit var movieInteractor: MovieInteractor
-    var movieRepository = MovieRepository()
+    lateinit var theMovieDBService: TheMovieDBService
+    lateinit var getFilmsUseCase: GetFilmsUseCase
+    lateinit var movieRepository: MovieRepositoryImp
 
     override fun onCreate() {
         super.onCreate()
-
-
+        instance = this
+        initRepository()
+        initRetrofit()
+        initUseCases()
     }
 
-    private fun initInteractor(){
-        movieInteractor = MovieInteractor(themoviedbService, movieRepository)
+    private fun initRepository() {
+        movieRepository= MovieRepositoryImp()
+    }
+
+    private fun initUseCases(){
+        getFilmsUseCase = GetFilmsUseCase(theMovieDBService, movieRepository)
     }
 
     private fun initRetrofit() {
-        themoviedbService = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BASE_URL)
-            .build()
-            .create(ThemoviedbService::class.java)
-        }
+        theMovieDBService = TheMovieDBmApi.retrofitService
+    }
 
     companion object {
         var instance: App? = null

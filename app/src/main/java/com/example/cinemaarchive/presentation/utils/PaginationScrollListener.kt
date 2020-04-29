@@ -1,4 +1,4 @@
-package com.example.cinemaarchive.utils
+package com.example.cinemaarchive.presentation.utils
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,17 +17,15 @@ abstract class PaginationScrollListener protected constructor(layoutManager: Rec
         val visibleItemCount: Int = layoutManager.childCount
         val totalItemCount: Int = layoutManager.itemCount
         val firstVisibleItemPosition: Int = layoutManager.findFirstVisibleItemPosition()
-        if (!isLoading() && !isLastPage()) {
+        if (!isLoading()) {
             if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
                 && firstVisibleItemPosition >= 0
             ) {
-                loadMoreItems()
+                lastItemReached()
             }
         }
     }
 
-    protected abstract fun loadMoreItems()
-    abstract fun getTotalPageCount(): Int
-    abstract fun isLastPage(): Boolean
+    protected abstract fun lastItemReached()
     abstract fun isLoading(): Boolean
 }
