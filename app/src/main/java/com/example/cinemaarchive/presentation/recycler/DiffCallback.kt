@@ -1,7 +1,7 @@
 package com.example.cinemaarchive.presentation.recycler
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.cinemaarchive.data.entity.Film
+import com.example.cinemaarchive.domain.entity.Film
 
 
 class DiffCallback(

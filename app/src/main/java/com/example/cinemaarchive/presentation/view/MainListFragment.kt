@@ -2,7 +2,6 @@ package com.example.cinemaarchive.presentation.view
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +10,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.presentation.view.detailfilm.OnFilmDetailFragmentListener
-import com.example.cinemaarchive.data.entity.Film
+import com.example.cinemaarchive.domain.entity.Film
+import com.example.cinemaarchive.presentation.enam.LoadingStates
 import com.example.cinemaarchive.presentation.recycler.FilmRecyclerAdapter
-import com.example.cinemaarchive.presentation.viewModel.LoadingStates
 import com.example.cinemaarchive.presentation.viewModel.MainListViewModel
 import com.example.cinemaarchive.presentation.utils.PaginationScrollListener
 import kotlinx.android.synthetic.main.main_fragment.*
+import kotlinx.android.synthetic.main.no_internet_connection.*
 
 
 class MainListFragment : Fragment() {
@@ -37,32 +37,36 @@ class MainListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        retainInstance = true
         initRecycler(ArrayList())
+        noInternetConnection.visibility = View.GONE
 
         mainSwiperefresh.setOnRefreshListener {
             main_progress.visibility = View.VISIBLE
             viewModel.refreshFistPage()
         }
 
+        retry.setOnClickListener { viewModel.refreshFistPage() }
+
         viewModel.responseLiveData.observe(viewLifecycleOwner, Observer {
-            main_progress.visibility = View.GONE
-            mainSwiperefresh.isRefreshing = false
+            hideProgresses()
             filmRecyclerAdapter.updateList(it)
         })
 
-        viewModel.loadingStateLiveData.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                LoadingStates.LOADING -> showLoadingFooter()
-                LoadingStates.LOADED -> hideLoadingFooter()
-                LoadingStates.ERROR -> showError()
-                else ->  Log.i("LoadingStates null","LoadingStates arguments is null")
+        viewModel.loadingStateLiveData.observe(viewLifecycleOwner, Observer { singleEvent ->
+            singleEvent.getContentIfNotHandled()?.let {
+                    when (it) {
+                        LoadingStates.LOADING -> showLoadingFooter()
+                        LoadingStates.LOADED -> hideLoadingFooter()
+                        LoadingStates.ERROR -> showError()
+                }
             }
         })
     }
 
     private fun showError() {
-        TODO("not implemented")
+        main_progress.visibility = View.GONE
+        massage.text = viewModel.errorLiveData.value?.peekContent()
+        noInternetConnection.visibility = View.VISIBLE
     }
 
     private fun showLoadingFooter(){
@@ -73,13 +77,19 @@ class MainListFragment : Fragment() {
         filmRecyclerAdapter.removeLoadingFooter()
     }
 
+    private fun hideProgresses(){
+        noInternetConnection.visibility = View.GONE
+        main_progress.visibility = View.GONE
+        mainSwiperefresh.isRefreshing = false
+    }
+
     private fun initRecycler(items: List<Film>) {
         filmRecyclerAdapter =
             FilmRecyclerAdapter(
                 items,
                 { mCallback.onOpenDetailFragment(it) },
-                { film: Film, position: Int, isFavoriteChecked: Boolean ->
-                    viewModel.updateFavoriteList(film, isFavoriteChecked) }
+                { film: Film, _: Int, isFavoriteChecked: Boolean ->
+                    viewModel.onLikeBtnClicked(film, isFavoriteChecked) }
             )
         mainFragmentRecycler.adapter = filmRecyclerAdapter
         setRecyclerScrollListener()
@@ -92,7 +102,7 @@ class MainListFragment : Fragment() {
                 viewModel.lastItemReached()
             }
             override fun isLoading(): Boolean {
-                return when (viewModel.loadingStateLiveData.value) {
+                return when (viewModel.loadingStateLiveData.value?.peekContent()) {
                     LoadingStates.LOADING -> true
                     else -> false
                 }
@@ -109,6 +119,12 @@ class MainListFragment : Fragment() {
                 "$context must implement OnFilmDetailFragmentListener"
             )
         }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden)
+            filmRecyclerAdapter.notifyDataSetChanged()
     }
 }
 

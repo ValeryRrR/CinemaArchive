@@ -24,5 +24,6 @@
     <string name="remove_from_favorite">Removed from favorite</string>
     <string name="description">Description</string>
     <string name="language">ru-RU</string>
+    <string name="retry">retry</string>
 
 </resources>

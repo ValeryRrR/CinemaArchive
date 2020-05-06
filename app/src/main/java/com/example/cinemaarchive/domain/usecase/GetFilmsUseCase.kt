@@ -1,40 +1,38 @@
 package com.example.cinemaarchive.domain.usecase
 
-import android.util.Log
-import com.example.cinemaarchive.data.entity.Film
 import com.example.cinemaarchive.data.network.*
-import com.example.cinemaarchive.data.repository.MovieRepositoryImp
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.cinemaarchive.domain.repository.MovieRepository
 
 class GetFilmsUseCase(
-    private var theMovieDBService: TheMovieDBService,
-    private var movieRepository: MovieRepositoryImp
+    private var theMovieDBApi: TheMovieDBApi,
+    private var movieRepository: MovieRepository
 ) {
 
-    fun getFilms(getFistPageCallback: GetFistPageCallback, page: Int){
-        theMovieDBService.getListFilms(API_KEY, RU_LANG, page).
+    fun getFilms(getFilmsCallback: GetFilmCallback, page: Int){
+        /*theMovieDBApi.getListFilms(API_KEY, RU_LANG, page).
             enqueue(object: Callback<ResponseDataClass>{
                 override fun onResponse(
                     call: Call<ResponseDataClass>,
                     response: Response<ResponseDataClass>
                 ) {
                     if(response.isSuccessful){
+                        if(page == 1){
+                            movieRepository.clearCache()
+                        }
                         movieRepository.addToCache(response.body()!!.results)
-                        getFistPageCallback.onSuccess(movieRepository.cachedOrFakeFilms)
+                        getFilmsCallback.onSuccess(movieRepository.cachedOrFakeFilms)
                     }
                 }
 
                 override fun onFailure(call: Call<ResponseDataClass>, t: Throwable) {
-                    Log.e( "Failure loadNextPage: ", t.message)
-                    getFistPageCallback.onError(t.message.toString())
+                    getFilmsCallback.onError(t.message.toString())
                 }
-            })
+            })*/
+        movieRepository.getFilms(getFilmsCallback, page)
     }
 
-    interface GetFistPageCallback {
+/*    interface GetFilmCallback {
         fun onSuccess(films: List<Film>)
         fun onError(error: String)
-    }
+    }*/
 }

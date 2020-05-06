@@ -1,8 +1,10 @@
 package com.example.cinemaarchive.domain.repository
 
-import com.example.cinemaarchive.data.entity.Film
+import com.example.cinemaarchive.domain.usecase.GetFilmCallback
+import com.example.cinemaarchive.domain.entity.Film
 
 interface MovieRepository {
-    fun addToCache(repos: List<Film>)
-    fun getFilmInfo(filmId: Int)
+    fun getFilmDetail(filmId: Int)
+    fun updateFavoriteList(filmId: Int, isFavorite: Boolean)
+    fun getFilms(getFilmsCallback: GetFilmCallback, page: Int)
 }

@@ -4,28 +4,34 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.cinemaarchive.App
-import com.example.cinemaarchive.data.entity.Film
-import com.example.cinemaarchive.data.database.Database
+import com.example.cinemaarchive.domain.entity.Film
+import com.example.cinemaarchive.domain.usecase.GetFilmCallback
 import com.example.cinemaarchive.domain.usecase.GetFilmsUseCase
+import com.example.cinemaarchive.presentation.enam.LoadingStates
+import com.example.cinemaarchive.presentation.utils.SingleEvent
 
 
 class MainListViewModel: ViewModel() {
 
-     val PAGE_START = 1
-     var TOTAL_PAGES = 50
-     var currentPage = PAGE_START
-
-     var isLastPage = false
+    private val pageStart = 1
+    private var totalPages = 50
+    private var currentPage = pageStart
+    private var isLastPage = false
 
     private val getFilmsUseCase = App.instance!!.getFilmsUseCase
+    private val updateFavoriteListUseCase = App.instance!!.updateFavoriteListUseCase
 
     private val _responseMutableLiveData = MutableLiveData<ArrayList<Film>>()
     val responseLiveData: LiveData<ArrayList<Film>>
         get() = _responseMutableLiveData
 
-    private val _loadingStateLiveData = MutableLiveData<LoadingStates>()
-    val loadingStateLiveData: LiveData<LoadingStates>
+    private val _loadingStateLiveData = MutableLiveData<SingleEvent<LoadingStates>>()
+    val loadingStateLiveData: LiveData<SingleEvent<LoadingStates>>
         get() = _loadingStateLiveData
+
+    private val _errorLiveData = MutableLiveData<SingleEvent<String>>()
+    val errorLiveData: LiveData<SingleEvent<String>>
+        get() = _errorLiveData
 
 
     init {
@@ -37,18 +43,19 @@ class MainListViewModel: ViewModel() {
     }
 
     private fun loadNextPage() {
-        if (currentPage <= TOTAL_PAGES)
-            _loadingStateLiveData.value = LoadingStates.LOADING
+        if (currentPage <= totalPages)
+            _loadingStateLiveData.value = SingleEvent(LoadingStates.LOADING)
 
-        getFilmsUseCase.getFilms(object : GetFilmsUseCase.GetFistPageCallback{
+        getFilmsUseCase.getFilms(object : GetFilmCallback {
             override fun onError(error: String) {
-                _loadingStateLiveData.value = LoadingStates.ERROR
+                _errorLiveData.value = SingleEvent(error)
+                _loadingStateLiveData.value = SingleEvent(LoadingStates.ERROR)
             }
 
             override fun onSuccess(films: List<Film>) {
                 _responseMutableLiveData.value = films as ArrayList<Film>
-                if (currentPage <= TOTAL_PAGES) {
-                    _loadingStateLiveData.value = LoadingStates.LOADED
+                if (currentPage <= totalPages) {
+                    _loadingStateLiveData.value = SingleEvent(LoadingStates.LOADED)
                 } else isLastPage = true
                 currentPage += 1
             }
@@ -56,9 +63,10 @@ class MainListViewModel: ViewModel() {
     }
 
     private fun loadFistPage(){
-        getFilmsUseCase.getFilms(object : GetFilmsUseCase.GetFistPageCallback{
+        getFilmsUseCase.getFilms(object : GetFilmCallback{
             override fun onError(error: String) {
-                _loadingStateLiveData.value = LoadingStates.ERROR
+                _errorLiveData.value = SingleEvent(error)
+                _loadingStateLiveData.value = SingleEvent(LoadingStates.ERROR)
             }
 
             override fun onSuccess(films: List<Film>) {
@@ -68,17 +76,12 @@ class MainListViewModel: ViewModel() {
         }, currentPage)
     }
 
-    fun updateFavoriteList(film: Film, isFavorite: Boolean){
-        film.isFavorite = isFavorite
-        if (isFavorite)
-            Database.favoriteList.add(film)
-        else if (!isFavorite)
-            Database.favoriteList.remove(film)
+    fun onLikeBtnClicked(film: Film, isFavorite: Boolean){
+        updateFavoriteListUseCase.updateFavoriteList(film.id, isFavorite)
     }
 
     fun refreshFistPage(){
-        //TODO fix it
-        currentPage = 1
+        currentPage = pageStart
         loadFistPage()
     }
 }
@@ -89,8 +92,4 @@ private operator fun <T> MutableLiveData<ArrayList<T>>.plusAssign(values: List<T
     val value = this.value ?: arrayListOf()
     value.addAll(values)
     this.value = value
-}
-
-enum class LoadingStates() {
-    LOADING, LOADED, ERROR
 }

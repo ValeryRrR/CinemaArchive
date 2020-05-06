@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.cinemaarchive.R
+import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.data.network.loadImage
-import com.example.cinemaarchive.data.entity.Film
-import com.example.cinemaarchive.presentation.view.detailfilm.IBottomNavOwner
 import kotlinx.android.synthetic.main.detail_fragment.*
 import kotlinx.android.synthetic.main.detail_fragment_collapsing.*
+
 
 const val FILM_DETAIL_FRAGMENT_TAG = "FILM_DETAIL_FRAGMENT"
 
@@ -64,5 +64,13 @@ class DetailFragment : Fragment() {
                 "$context must implement IBottomNavOwner"
             )
         }
+    }
+
+    fun newInstance(film: Film): DetailFragment {
+        val myFragment = DetailFragment()
+        val args = Bundle()
+        args.putParcelable("filmDetail", film)
+        myFragment.arguments = args
+        return myFragment
     }
 }

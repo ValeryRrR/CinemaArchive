@@ -31,6 +31,11 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/no_internet_connection" />
+
     <ProgressBar
         android:id="@+id/main_progress"
         android:layout_width="wrap_content"

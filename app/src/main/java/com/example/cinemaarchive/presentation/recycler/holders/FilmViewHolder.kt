@@ -5,7 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cinemaarchive.data.entity.Film
+import com.example.cinemaarchive.domain.entity.Film
 import kotlinx.android.synthetic.main.item_film.view.*
 
 class FilmViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

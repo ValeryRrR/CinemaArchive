@@ -1,31 +1,38 @@
 package com.example.cinemaarchive.data.repository
 
-import com.example.cinemaarchive.data.entity.Film
+import android.util.Log
+import com.example.cinemaarchive.data.cache.FilmCache
+import com.example.cinemaarchive.data.database.Database
+import com.example.cinemaarchive.data.repository.datasource.FilmDataStoreFactory
+import com.example.cinemaarchive.domain.entity.Film
+import com.example.cinemaarchive.domain.usecase.GetFilmCallback
 import com.example.cinemaarchive.domain.repository.MovieRepository
-import java.util.ArrayList
+import java.lang.IllegalStateException
 
-class MovieRepositoryImp: MovieRepository {
-    private val cachedFilms = ArrayList<Film>()
-    private val fakeFilms = ArrayList<Film>()
+class MovieRepositoryImp(
+    private val filmDataStoreFactory: FilmDataStoreFactory,
+    private val filmCache: FilmCache) : MovieRepository{
 
-    val cachedOrFakeFilms: List<Film>
-        get() = if (cachedFilms.size > 0)
-            cachedFilms
-        else
-            fakeFilms
-
-    init {
-        fakeFilms.add(Film())
-        fakeFilms.add(Film())
-        fakeFilms.add(Film())
-        fakeFilms.add(Film())
-    }
-
-    override fun addToCache(repos: List<Film>) {
-        this.cachedFilms.addAll(repos)
-    }
-
-    override fun getFilmInfo(filmId: Int) {
+    override fun getFilmDetail(filmId: Int) {
         TODO("not implemented")
+    }
+
+    override fun getFilms(getFilmsCallback: GetFilmCallback, page: Int) {
+        filmDataStoreFactory.createRemoteDataStore().getMovieListPage(getFilmsCallback, page)
+    }
+
+    override fun updateFavoriteList(filmId: Int, isFavorite: Boolean) {
+        val film = getCachedFilmById(filmId)
+            ?: throw  IllegalStateException("Film can't be null before adding to favorites")
+        film.isFavorite = isFavorite
+        if (isFavorite)
+            Database.favoriteList.add(film)
+        else if (!isFavorite) {
+            Database.favoriteList.remove(film)
+        }
+    }
+
+    private fun getCachedFilmById(filmId: Int): Film? {
+        return filmCache.getAll().firstOrNull{ it.id == filmId }
     }
 }

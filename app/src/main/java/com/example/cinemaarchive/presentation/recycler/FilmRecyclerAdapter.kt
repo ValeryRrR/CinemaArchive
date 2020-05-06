@@ -1,15 +1,13 @@
 package com.example.cinemaarchive.presentation.recycler
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.data.database.Database.favoriteList
-import com.example.cinemaarchive.data.entity.Film
+import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.data.network.loadImage
 import com.example.cinemaarchive.presentation.recycler.holders.FilmViewHolder
 import com.example.cinemaarchive.presentation.recycler.holders.LoadingViewHolder
@@ -26,11 +24,6 @@ class FilmRecyclerAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var isLoadingFooterAdded = false
-
-    init {
-        for (film in items)
-            markFavorites(film)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         var viewHolder: RecyclerView.ViewHolder? = null
@@ -87,11 +80,6 @@ class FilmRecyclerAdapter(
                 notifyItemInserted(mAdapterPosition)
             }
         snackBar.show()
-    }
-
-    private fun markFavorites(film: Film){
-        if (favoriteList.contains(film))
-            film.isFavorite = true
     }
 
     override fun getItemViewType(position: Int): Int {

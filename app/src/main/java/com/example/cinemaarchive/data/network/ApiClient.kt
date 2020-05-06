@@ -2,6 +2,7 @@ package com.example.cinemaarchive.data.network
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.net.ConnectivityManager
 import com.example.cinemaarchive.R
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -26,8 +27,8 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 object TheMovieDBmApi {
-    val retrofitService: TheMovieDBService by lazy {
-        retrofit.create(TheMovieDBService::class.java)
+    val retrofitApi: TheMovieDBApi by lazy {
+        retrofit.create(TheMovieDBApi::class.java)
     }
 }
 
@@ -35,7 +36,7 @@ fun loadImage(posterPath: String?, context: Context): GlideRequest<Drawable?>? {
     return GlideApp
         .with(context)
         .load(getImageURL(posterPath))
-        .fallback(R.drawable.gradient)
+        .fallback(R.drawable.gradient) //TODO create holder for films without albums
         .centerCrop()
 }
 
@@ -44,4 +45,13 @@ private fun getImageURL(posterPath: String?): String?{
         return null
     }
     return BASE_URL_IMG + posterPath
+}
+
+fun isThereInternetConnection(context: Context): Boolean {
+    val isConnected: Boolean
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val networkInfo = connectivityManager.activeNetworkInfo
+    isConnected = networkInfo != null
+    return isConnected
 }
