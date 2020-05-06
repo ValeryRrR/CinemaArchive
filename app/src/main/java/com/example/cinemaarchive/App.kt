@@ -7,6 +7,7 @@ import com.example.cinemaarchive.data.network.TheMovieDBmApi
 import com.example.cinemaarchive.data.network.TheMovieDBApi
 import com.example.cinemaarchive.data.repository.MovieRepositoryImp
 import com.example.cinemaarchive.data.repository.datasource.FilmDataStoreFactory
+import com.example.cinemaarchive.domain.usecase.GetFavoriteListUseCase
 import com.example.cinemaarchive.domain.usecase.GetFilmsUseCase
 import com.example.cinemaarchive.domain.usecase.UpdateFavoriteListUseCase
 
@@ -16,6 +17,7 @@ class App: Application() {
     lateinit var movieRepository: MovieRepositoryImp
     lateinit var filmDataStoreFactory: FilmDataStoreFactory
     lateinit var updateFavoriteListUseCase: UpdateFavoriteListUseCase
+    lateinit var getFavoriteListUseCase: GetFavoriteListUseCase
     lateinit var filmCache: FilmCache
 
 
@@ -43,8 +45,9 @@ class App: Application() {
     }
 
     private fun initUseCases(){
-        getFilmsUseCase = GetFilmsUseCase(theMovieDBApi, movieRepository)
+        getFilmsUseCase = GetFilmsUseCase(movieRepository)
         updateFavoriteListUseCase = UpdateFavoriteListUseCase(movieRepository)
+        getFavoriteListUseCase = GetFavoriteListUseCase(movieRepository)
     }
 
     private fun initRetrofit() {

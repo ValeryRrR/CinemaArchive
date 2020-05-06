@@ -104,7 +104,7 @@ class FilmRecyclerAdapter(
         notifyItemRemoved(footerPosition)
     }
 
-    fun updateList(newList: ArrayList<Film>) {
+    fun updateList(newList: List<Film>) {
         items = newList
         notifyDataSetChanged()
     }

@@ -1,6 +1,5 @@
 package com.example.cinemaarchive.data.repository
 
-import android.util.Log
 import com.example.cinemaarchive.data.cache.FilmCache
 import com.example.cinemaarchive.data.database.Database
 import com.example.cinemaarchive.data.repository.datasource.FilmDataStoreFactory
@@ -34,5 +33,13 @@ class MovieRepositoryImp(
 
     private fun getCachedFilmById(filmId: Int): Film? {
         return filmCache.getAll().firstOrNull{ it.id == filmId }
+    }
+
+    override fun isFavoriteListEmpty(): Boolean{
+        return Database.favoriteList.isEmpty()
+    }
+
+    override fun getFavoriteList(): List<Film> {
+        return Database.favoriteList
     }
 }

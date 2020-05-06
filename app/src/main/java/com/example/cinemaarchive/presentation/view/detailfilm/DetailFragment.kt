@@ -17,7 +17,7 @@ const val FILM_DETAIL_FRAGMENT_TAG = "FILM_DETAIL_FRAGMENT"
 
 class DetailFragment : Fragment() {
 
-
+    var iBottomNavOwner: IBottomNavOwner? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,21 +29,18 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val film: Film = arguments?.getParcelable("filmDetail")!!
-
         fillFilmInformation(film)
     }
 
     private fun fillFilmInformation(film: Film) {
-        loadImage(film.filmPoster, image_view_poster_collapsing.context)?.into(image_view_poster_collapsing)//image_view_poster_collapsing.setImageResource(film.filmPoster)
-        loadImage(film.filmPoster, image_view_poster.context)?.into(image_view_poster)//image_view_poster.setImageResource(film.filmPoster)
+        loadImage(film.filmPoster, image_view_poster_collapsing.context)
+            ?.into(image_view_poster_collapsing)
+        loadImage(film.filmPoster, image_view_poster.context)
+            ?.into(image_view_poster)
         film_name.text = film.name
         film_description.text = film.description
     }
-
-
-    var iBottomNavOwner: IBottomNavOwner? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

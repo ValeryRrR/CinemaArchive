@@ -43,7 +43,7 @@ class FavoriteListFragment : Fragment() {
 
         viewModel.favoriteListLiveData.observe(viewLifecycleOwner, Observer {
             filmRecyclerAdapter.updateList(it)
-        } )
+        })
     }
 
     private fun initRecycler(items: List<Film>) {
