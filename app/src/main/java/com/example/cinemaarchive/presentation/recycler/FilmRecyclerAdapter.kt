@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.data.database.Database.favoriteList
-import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.data.network.loadImage
+import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.presentation.recycler.holders.FilmViewHolder
 import com.example.cinemaarchive.presentation.recycler.holders.LoadingViewHolder
 import com.google.android.material.snackbar.Snackbar
@@ -35,7 +35,8 @@ class FilmRecyclerAdapter(
             }
             LOADING -> {
                 val viewLoading: View =
-                    LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false)
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_loading, parent, false)
                 viewHolder = LoadingViewHolder(viewLoading)
             }
         }
@@ -45,8 +46,7 @@ class FilmRecyclerAdapter(
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
-        when(holder.itemViewType){
+        when (holder.itemViewType) {
             ITEM -> {
                 (holder as FilmViewHolder).bind(
                     items[position],
@@ -62,34 +62,18 @@ class FilmRecyclerAdapter(
         }
     }
 
-     //TODO move snackBar above the bottomNavigation
-     fun onItemRemove(
+    fun onItemRemove(
         mAdapterPosition: Int,
         film: Film,
         view: View
     ) {
-        val snackBar: Snackbar = Snackbar
-            .make(
-                view,
-                R.string.remove_from_favorite,
-                Snackbar.LENGTH_LONG
-            )
-            .setAction(R.string.undo) {
-                film.isFavorite = true
-                favoriteList.add(mAdapterPosition, film)
-                notifyItemInserted(mAdapterPosition)
-            }
-        snackBar.show()
+        showSnackBar(mAdapterPosition, film, view)
     }
 
     override fun getItemViewType(position: Int): Int {
         return if (position == items.size - 1 && isLoadingFooterAdded) LOADING else ITEM
     }
 
-    /*
-        Helpers - Footer
-   ___________________________________________________________________________________________
-    */
     private var footerPosition = items.size
     fun addLoadingFooter() {
         footerPosition = items.size
@@ -108,5 +92,26 @@ class FilmRecyclerAdapter(
         items = newList
         notifyDataSetChanged()
     }
+
+    private fun showSnackBar(
+        mAdapterPosition: Int,
+        film: Film,
+        view: View
+    ) {
+        val snackBar: Snackbar = Snackbar
+            .make(
+                view,
+                R.string.remove_from_favorite,
+                Snackbar.LENGTH_LONG
+            )
+
+        snackBar.setAction(R.string.undo) {
+            film.isFavorite = true
+            favoriteList.add(mAdapterPosition, film)
+            notifyItemInserted(mAdapterPosition)
+        }
+        snackBar.show()
+    }
+
 }
 

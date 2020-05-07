@@ -9,12 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.cinemaarchive.R
-import com.example.cinemaarchive.presentation.view.detailfilm.OnFilmDetailFragmentListener
 import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.presentation.recycler.FilmRecyclerAdapter
+import com.example.cinemaarchive.presentation.view.detailfilm.OnFilmDetailFragmentListener
 import com.example.cinemaarchive.presentation.viewModel.FavoriteListViewModel
 import kotlinx.android.synthetic.main.favarite_list_fragment.*
-
 
 class FavoriteListFragment : Fragment() {
 

@@ -7,9 +7,7 @@ class FilmCacheImp : FilmCache {
     private val cachedFilms = ArrayList<Film>()
 
     override fun get(filmId: Int): Film? {
-        return if (isCached(filmId))
-            cachedFilms.filter { filmId == it.id }[0]
-        else null
+        return cachedFilms.firstOrNull { filmId == it.id }
     }
 
     override fun getAll(): List<Film> {
