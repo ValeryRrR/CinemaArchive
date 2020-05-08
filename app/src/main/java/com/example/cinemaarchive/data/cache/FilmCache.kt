@@ -1,12 +1,12 @@
 package com.example.cinemaarchive.data.cache
 
-import com.example.cinemaarchive.domain.entity.Film
+import com.example.cinemaarchive.data.entity.FilmDataEntity
 
 interface FilmCache {
-    fun get(filmId: Int): Film?
-    fun getAll(): List<Film>
-    fun put(film: Film)
-    fun putAll(listFilm: List<Film>)
+    fun get(filmId: Int): FilmDataEntity?
+    fun getAll(): List<FilmDataEntity>
+    fun put(film: FilmDataEntity)
+    fun putAll(listFilm: List<FilmDataEntity>)
     fun isCached(filmId: Int): Boolean
     fun isExpired(): Boolean
     fun clearAll()

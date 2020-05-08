@@ -24,7 +24,7 @@ class MainListFragment : Fragment() {
     private lateinit var filmRecyclerAdapter: FilmRecyclerAdapter
     private lateinit var mCallback: OnFilmDetailFragmentListener
     private val viewModel: MainListViewModel by lazy {
-        ViewModelProvider(this).get(MainListViewModel::class.java)
+        ViewModelProvider(activity!!).get(MainListViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -36,6 +36,7 @@ class MainListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        retainInstance = true
         super.onViewCreated(view, savedInstanceState)
         initRecycler(ArrayList())
         noInternetConnection.visibility = View.GONE
@@ -88,8 +89,8 @@ class MainListFragment : Fragment() {
             FilmRecyclerAdapter(
                 items,
                 { mCallback.onOpenDetailFragment(it) },
-                { film: Film, _: Int, isFavoriteChecked: Boolean ->
-                    viewModel.onLikeBtnClicked(film, isFavoriteChecked) }
+                { film: Film, position: Int, isFavoriteChecked: Boolean ->
+                    viewModel.onLikeBtnClicked(film, position, isFavoriteChecked) }
             )
         mainFragmentRecycler.adapter = filmRecyclerAdapter
         setRecyclerScrollListener()

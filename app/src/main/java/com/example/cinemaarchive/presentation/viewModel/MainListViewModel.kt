@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.example.cinemaarchive.App
 import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.domain.usecase.GetFilmCallback
-import com.example.cinemaarchive.domain.usecase.GetFilmsUseCase
 import com.example.cinemaarchive.presentation.enam.LoadingStates
 import com.example.cinemaarchive.presentation.utils.SingleEvent
 
@@ -76,13 +75,18 @@ class MainListViewModel: ViewModel() {
         }, currentPage)
     }
 
-    fun onLikeBtnClicked(film: Film, isFavorite: Boolean){
+    fun onLikeBtnClicked(film: Film, position: Int, isFavorite: Boolean){
         updateFavoriteListUseCase.updateFavoriteList(film.id, isFavorite)
+        _responseMutableLiveData.value?.get(position)?.isFavorite = isFavorite
     }
 
     fun refreshFistPage(){
         currentPage = pageStart
         loadFistPage()
+    }
+
+    fun updateFavoriteBtnInMainList(filmId: Int, isFavorite: Boolean){
+        _responseMutableLiveData.value?.first{it.id == filmId}?.isFavorite = isFavorite
     }
 }
 /**

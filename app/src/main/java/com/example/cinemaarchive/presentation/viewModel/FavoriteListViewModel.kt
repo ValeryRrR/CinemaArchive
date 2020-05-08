@@ -32,7 +32,7 @@ class FavoriteListViewModel: ViewModel() {
          }
     }
 
-    fun removeFavoriteFilm(film: Film){
-        updateFavoriteListUseCase.updateFavoriteList(film.id, false)
+    fun updateFavoriteListByPosition(film: Film, isFavorite: Boolean, position: Int){
+        updateFavoriteListUseCase.updateFavoriteListByPosition(film.id, isFavorite, position)
     }
 }

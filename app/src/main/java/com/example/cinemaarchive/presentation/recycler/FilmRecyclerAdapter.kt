@@ -6,12 +6,10 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinemaarchive.R
-import com.example.cinemaarchive.data.database.Database.favoriteList
 import com.example.cinemaarchive.data.network.loadImage
 import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.presentation.recycler.holders.FilmViewHolder
 import com.example.cinemaarchive.presentation.recycler.holders.LoadingViewHolder
-import com.google.android.material.snackbar.Snackbar
 
 
 private const val ITEM = 0
@@ -64,10 +62,17 @@ class FilmRecyclerAdapter(
 
     fun onItemRemove(
         mAdapterPosition: Int,
-        film: Film,
-        view: View
+        film: Film
     ) {
-        showSnackBar(mAdapterPosition, film, view)
+        (items as ArrayList<Film>).remove(film)
+        notifyItemRemoved(mAdapterPosition)
+    }
+
+    fun onItemAdd(
+        mAdapterPosition: Int,
+        film: Film){
+        (items as ArrayList<Film>).add(mAdapterPosition, film)
+        notifyItemInserted(mAdapterPosition)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -92,26 +97,5 @@ class FilmRecyclerAdapter(
         items = newList
         notifyDataSetChanged()
     }
-
-    private fun showSnackBar(
-        mAdapterPosition: Int,
-        film: Film,
-        view: View
-    ) {
-        val snackBar: Snackbar = Snackbar
-            .make(
-                view,
-                R.string.remove_from_favorite,
-                Snackbar.LENGTH_LONG
-            )
-
-        snackBar.setAction(R.string.undo) {
-            film.isFavorite = true
-            favoriteList.add(mAdapterPosition, film)
-            notifyItemInserted(mAdapterPosition)
-        }
-        snackBar.show()
-    }
-
 }
 

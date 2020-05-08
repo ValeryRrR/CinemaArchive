@@ -3,12 +3,13 @@ package com.example.cinemaarchive.data.repository.datasource
 import android.content.Context
 import com.example.cinemaarchive.data.cache.FilmCache
 import com.example.cinemaarchive.data.database.Database
+import com.example.cinemaarchive.data.entity.FilmDataEntity
+import com.example.cinemaarchive.data.entity.toDomainFilm
 import com.example.cinemaarchive.data.network.API_KEY
 import com.example.cinemaarchive.data.network.RU_LANG
 import com.example.cinemaarchive.data.network.ResponseDataClass
 import com.example.cinemaarchive.data.network.TheMovieDBApi
 import com.example.cinemaarchive.data.network.isThereInternetConnection
-import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.domain.usecase.GetFilmCallback
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,7 +38,7 @@ class RemoteDataSource(
                         }
                         response.body()!!.results.map { markFavorites(it) }
                         filmCache.putAll(response.body()!!.results)
-                        getFilmsCallback.onSuccess(filmCache.getAll())
+                        getFilmsCallback.onSuccess(filmCache.getAll().map { it.toDomainFilm() })
                     }
                 }
 
@@ -47,11 +48,11 @@ class RemoteDataSource(
             })
     }
 
-    override fun getFilmEntityDetails(filmId: Film): Film? {
+    override fun getFilmEntityDetails(filmId: FilmDataEntity): FilmDataEntity? {
         TODO("not implemented")
     }
 
-    private fun markFavorites(film: Film) {
+    private fun markFavorites(film: FilmDataEntity) {
         if (Database.favoriteList.contains(film))
             film.isFavorite = true
     }

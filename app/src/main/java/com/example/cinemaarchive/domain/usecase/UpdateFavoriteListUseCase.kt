@@ -8,4 +8,8 @@ class UpdateFavoriteListUseCase(
     fun updateFavoriteList(filmId: Int, isFavorite: Boolean){
         movieRepository.updateFavoriteList(filmId, isFavorite)
     }
+
+    fun updateFavoriteListByPosition(filmId: Int, isFavorite: Boolean, position: Int){
+        movieRepository.updateFavoriteListByPosition(filmId, isFavorite, position)
+    }
 }

@@ -1,7 +1,6 @@
 package com.example.cinemaarchive.data.network
 
 import android.content.Context
-import androidx.annotation.NonNull
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -10,7 +9,7 @@ import com.bumptech.glide.request.RequestOptions
 
 @GlideModule
 class PaginationGlideModule : AppGlideModule() {
-    override fun applyOptions(@NonNull context: Context, @NonNull builder: GlideBuilder) {
+    override fun applyOptions(context: Context, builder: GlideBuilder) {
         super.applyOptions(context, builder)
         builder.setDefaultRequestOptions(
             RequestOptions()

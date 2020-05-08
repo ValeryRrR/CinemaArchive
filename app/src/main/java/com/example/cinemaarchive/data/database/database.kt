@@ -1,7 +1,7 @@
 package com.example.cinemaarchive.data.database
 
-import com.example.cinemaarchive.domain.entity.Film
+import com.example.cinemaarchive.data.entity.FilmDataEntity
 
 object Database{
-    val favoriteList = ArrayList<Film>()
+    val favoriteList = ArrayList<FilmDataEntity>()
 }

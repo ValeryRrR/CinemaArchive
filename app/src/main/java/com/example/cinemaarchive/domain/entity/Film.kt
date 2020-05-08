@@ -1,16 +1,16 @@
 package com.example.cinemaarchive.domain.entity
 
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
+import com.example.cinemaarchive.data.entity.FilmDataEntity
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Film(
-    @SerializedName("id") val id: Int,
-    @SerializedName("title") val name: String,
-    @SerializedName("poster_path") val filmPoster: String?,
-    @SerializedName("overview") var description: String,
-    @SerializedName("vote_average") var voteAverage: Double,
+    val id: Int,
+    val name: String,
+    val filmPoster: String?,
+    var description: String,
+    var voteAverage: Double,
     var isFavorite: Boolean
     ): Parcelable{
 
