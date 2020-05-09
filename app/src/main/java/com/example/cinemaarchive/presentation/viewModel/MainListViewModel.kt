@@ -3,22 +3,23 @@ package com.example.cinemaarchive.presentation.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.cinemaarchive.App
 import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.domain.usecase.GetFilmCallback
+import com.example.cinemaarchive.domain.usecase.GetFilmsUseCase
+import com.example.cinemaarchive.domain.usecase.UpdateFavoriteListUseCase
 import com.example.cinemaarchive.presentation.enam.LoadingStates
 import com.example.cinemaarchive.presentation.utils.SingleEvent
 
 
-class MainListViewModel: ViewModel() {
+class MainListViewModel(
+    private val updateFavoriteListUseCase: UpdateFavoriteListUseCase,
+    private val getFilmsUseCase: GetFilmsUseCase
+): ViewModel() {
 
     private val pageStart = 1
     private var totalPages = 50
     private var currentPage = pageStart
     private var isLastPage = false
-
-    private val getFilmsUseCase = App.instance!!.getFilmsUseCase
-    private val updateFavoriteListUseCase = App.instance!!.updateFavoriteListUseCase
 
     private val _responseMutableLiveData = MutableLiveData<ArrayList<Film>>()
     val responseLiveData: LiveData<ArrayList<Film>>

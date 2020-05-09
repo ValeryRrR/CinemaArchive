@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.cinemaarchive.App
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.presentation.view.detailfilm.OnFilmDetailFragmentListener
 import com.example.cinemaarchive.domain.entity.Film
@@ -24,8 +25,10 @@ class MainListFragment : Fragment() {
     private lateinit var filmRecyclerAdapter: FilmRecyclerAdapter
     private lateinit var mCallback: OnFilmDetailFragmentListener
     private val viewModel: MainListViewModel by lazy {
-        ViewModelProvider(activity!!).get(MainListViewModel::class.java)
+        ViewModelProvider(activity!!, mainViewModelFactory).get(MainListViewModel::class.java)
     }
+
+    private val mainViewModelFactory = App.instance!!.mainViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,

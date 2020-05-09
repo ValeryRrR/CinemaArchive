@@ -3,10 +3,14 @@ package com.example.cinemaarchive.presentation.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.cinemaarchive.App
 import com.example.cinemaarchive.domain.entity.Film
+import com.example.cinemaarchive.domain.usecase.GetFavoriteListUseCase
+import com.example.cinemaarchive.domain.usecase.UpdateFavoriteListUseCase
 
-class FavoriteListViewModel: ViewModel() {
+class FavoriteListViewModel(
+    private val updateFavoriteListUseCase: UpdateFavoriteListUseCase,
+    private val getFavoriteListUseCase: GetFavoriteListUseCase
+): ViewModel() {
 
     private val _favoriteListLiveData = MutableLiveData<List<Film>>()
     val favoriteListLiveData: LiveData<List<Film>>
@@ -15,9 +19,6 @@ class FavoriteListViewModel: ViewModel() {
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String>
         get() = _errorLiveData
-
-    private val updateFavoriteListUseCase = App.instance!!.updateFavoriteListUseCase
-    private val getFavoriteListUseCase = App.instance!!.getFavoriteListUseCase
 
     init {
         refreshFavoriteList()

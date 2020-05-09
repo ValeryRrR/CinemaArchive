@@ -10,8 +10,10 @@ import com.example.cinemaarchive.data.repository.datasource.FilmDataStoreFactory
 import com.example.cinemaarchive.domain.usecase.GetFavoriteListUseCase
 import com.example.cinemaarchive.domain.usecase.GetFilmsUseCase
 import com.example.cinemaarchive.domain.usecase.UpdateFavoriteListUseCase
+import com.example.cinemaarchive.presentation.viewModel.FavoriteViewModelFactory
+import com.example.cinemaarchive.presentation.viewModel.MainViewModelFactory
 
-class App: Application() {
+class App : Application() {
     lateinit var theMovieDBApi: TheMovieDBApi
     lateinit var getFilmsUseCase: GetFilmsUseCase
     lateinit var movieRepository: MovieRepositoryImp
@@ -19,6 +21,8 @@ class App: Application() {
     lateinit var updateFavoriteListUseCase: UpdateFavoriteListUseCase
     lateinit var getFavoriteListUseCase: GetFavoriteListUseCase
     lateinit var filmCache: FilmCache
+    lateinit var favoriteViewModelFactory: FavoriteViewModelFactory
+    lateinit var mainViewModelFactory: MainViewModelFactory
 
 
     override fun onCreate() {
@@ -29,6 +33,7 @@ class App: Application() {
         initRepository()
         initRetrofit()
         initUseCases()
+        initViewModelFactories()
     }
 
     private fun initCaches() {
@@ -40,11 +45,22 @@ class App: Application() {
         filmDataStoreFactory = FilmDataStoreFactory(filmCache, applicationContext)
     }
 
+    private fun initViewModelFactories(){
+        favoriteViewModelFactory = FavoriteViewModelFactory(
+            updateFavoriteListUseCase,
+            getFavoriteListUseCase
+        )
+        mainViewModelFactory = MainViewModelFactory(
+            updateFavoriteListUseCase,
+            getFilmsUseCase
+        )
+    }
+
     private fun initRepository() {
         movieRepository = MovieRepositoryImp(filmDataStoreFactory, filmCache)
     }
 
-    private fun initUseCases(){
+    private fun initUseCases() {
         getFilmsUseCase = GetFilmsUseCase(movieRepository)
         updateFavoriteListUseCase = UpdateFavoriteListUseCase(movieRepository)
         getFavoriteListUseCase = GetFavoriteListUseCase(movieRepository)
