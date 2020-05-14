@@ -52,7 +52,7 @@ class MainListViewModel(
                 _loadingStateLiveData.value = SingleEvent(LoadingStates.ERROR)
             }
 
-            override fun onSuccess(films: List<Film>) {
+            override fun onSuccess(films: List<Film>?) {
                 _responseMutableLiveData.value = films as ArrayList<Film>
                 if (currentPage <= totalPages) {
                     _loadingStateLiveData.value = SingleEvent(LoadingStates.LOADED)
@@ -69,7 +69,7 @@ class MainListViewModel(
                 _loadingStateLiveData.value = SingleEvent(LoadingStates.ERROR)
             }
 
-            override fun onSuccess(films: List<Film>) {
+            override fun onSuccess(films: List<Film>?) {
                 _responseMutableLiveData.value = films as ArrayList<Film>
                 currentPage += 1
             }

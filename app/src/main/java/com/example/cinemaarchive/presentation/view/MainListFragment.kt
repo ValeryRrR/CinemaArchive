@@ -25,7 +25,7 @@ class MainListFragment : Fragment() {
     private lateinit var filmRecyclerAdapter: FilmRecyclerAdapter
     private lateinit var mCallback: OnFilmDetailFragmentListener
     private val viewModel: MainListViewModel by lazy {
-        ViewModelProvider(activity!!, mainViewModelFactory).get(MainListViewModel::class.java)
+        ViewModelProvider(requireActivity(), mainViewModelFactory).get(MainListViewModel::class.java)
     }
 
     private val mainViewModelFactory = App.instance!!.mainViewModelFactory

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.data.network.loadImage
@@ -81,9 +82,9 @@ class FilmRecyclerAdapter(
 
     private var footerPosition = items.size
     fun addLoadingFooter() {
-        footerPosition = items.size
         isLoadingFooterAdded = true
         (items as ArrayList<Film>).add(Film())
+        footerPosition = items.size
         notifyItemInserted(footerPosition)
     }
 
@@ -94,8 +95,10 @@ class FilmRecyclerAdapter(
     }
 
     fun updateList(newList: List<Film>) {
+        val diffCallback = DiffCallback(newList, items)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         items = newList
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 }
 

@@ -2,6 +2,8 @@ package com.example.cinemaarchive.presentation.view
 
 import android.content.Context
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +29,7 @@ class FavoriteListFragment : Fragment() {
     private lateinit var filmRecyclerAdapter: FilmRecyclerAdapter
 
     private val mainListViewModel: MainListViewModel by lazy {
-        ViewModelProvider(activity!!).get(MainListViewModel::class.java)
+        ViewModelProvider(requireActivity()).get(MainListViewModel::class.java)
     }
 
     private val favoriteViewModelFactory = App.instance!!.favoriteViewModelFactory
@@ -102,6 +104,16 @@ class FavoriteListFragment : Fragment() {
                 Snackbar.LENGTH_LONG
             )
 
+        val timer = object: CountDownTimer(5000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+            }
+
+            override fun onFinish() {
+                //TODO move deleted here
+            }
+        }
+
+
         snackBar.setAction(R.string.undo) {
             film.isFavorite = true
             filmRecyclerAdapter.onItemAdd(mAdapterPosition, film)
@@ -109,6 +121,7 @@ class FavoriteListFragment : Fragment() {
             mainListViewModel.updateFavoriteBtnInMainList(film.id, film.isFavorite)
         }
         snackBar.show()
+        timer.start()
     }
 }
 
