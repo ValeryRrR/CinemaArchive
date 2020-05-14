@@ -68,7 +68,6 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/imageView_filmPoster"
             app:layout_constraintTop_toBottomOf="@+id/textView_name"
-            tools:text="When the world's best spy is turned into a pigeon, he must rely on his nerdy tech officer to save the world."
             android:maxLines="3"
             android:ellipsize="end"/>
 

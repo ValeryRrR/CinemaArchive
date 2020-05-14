@@ -16,19 +16,25 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/main_swiperefresh"
+        android:id="@+id/mainSwiperefresh"
         android:layout_width="wrap_content"
         android:layout_height="0px"
         android:layout_weight="1">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/main_fragment_recycler"
+        android:id="@+id/mainFragmentRecycler"
+        android:overScrollMode="never"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_film" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/no_internet_connection" />
 
     <ProgressBar
         android:id="@+id/main_progress"
