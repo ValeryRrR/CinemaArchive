@@ -19,6 +19,7 @@ import com.example.cinemaarchive.presentation.viewModel.FavoriteListViewModel
 import com.example.cinemaarchive.presentation.viewModel.MainListViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.favarite_list_fragment.*
+import java.util.concurrent.TimeUnit
 
 class FavoriteListFragment : Fragment() {
 
@@ -60,26 +61,17 @@ class FavoriteListFragment : Fragment() {
                 items,
                 { mCallback?.onOpenDetailFragment(it) },
                 { film: Film, position: Int, isFavoriteChecked: Boolean ->
-                    removeFilmFromFavorites(film, position, isFavoriteChecked) }
+                    likeBtnClicked(film, position, isFavoriteChecked) }
             )
         favoriteListRecycler.adapter = filmRecyclerAdapter
     }
 
-    private fun removeFilmFromFavorites(film: Film, position: Int, isFavoriteChecked: Boolean) {
+    private fun likeBtnClicked(film: Film, position: Int, isFavoriteChecked: Boolean) {
         filmRecyclerAdapter.onItemRemove(position, film)
-        viewModel.updateFavoriteListByPosition(film, isFavoriteChecked, position)
+        film.isFavorite = isFavoriteChecked
         showSnackBar(position, film, favoriteListRecycler)
-        mainListViewModel.updateFavoriteBtnInMainList(film.id, isFavoriteChecked)
+        updateFavoriteBtnInMainList(film.id, film.isFavorite)
     }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden){
-            viewModel.refreshFavoriteList()
-            filmRecyclerAdapter.notifyDataSetChanged()
-        }
-    }
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -104,12 +96,20 @@ class FavoriteListFragment : Fragment() {
                 Snackbar.LENGTH_LONG
             )
 
-        val timer = object: CountDownTimer(5000, 1000) {
+        val timer = object: CountDownTimer(4000, 1000) {
+            private val deleted = getString(R.string.deleted)
+            private val sec = getString(R.string.sec)
+
             override fun onTick(millisUntilFinished: Long) {
+                snackBar.setText(deleted + String.format(" %d $sec",
+                    TimeUnit.MILLISECONDS.toSeconds( millisUntilFinished)))
             }
 
             override fun onFinish() {
-                //TODO move deleted here
+                if (!film.isFavorite) {
+                    viewModel.onLikeBtnClicked(film, film.isFavorite)
+                    updateFavoriteBtnInMainList(film.id, film.isFavorite)
+                }
             }
         }
 
@@ -117,11 +117,14 @@ class FavoriteListFragment : Fragment() {
         snackBar.setAction(R.string.undo) {
             film.isFavorite = true
             filmRecyclerAdapter.onItemAdd(mAdapterPosition, film)
-            viewModel.updateFavoriteListByPosition(film, film.isFavorite, mAdapterPosition)
-            mainListViewModel.updateFavoriteBtnInMainList(film.id, film.isFavorite)
+            updateFavoriteBtnInMainList(film.id, film.isFavorite)
         }
         snackBar.show()
         timer.start()
+    }
+
+    private fun updateFavoriteBtnInMainList(filmId: Int, isFavorite: Boolean){
+        mainListViewModel.updateFavoriteBtnInMainList(filmId, isFavorite)
     }
 }
 

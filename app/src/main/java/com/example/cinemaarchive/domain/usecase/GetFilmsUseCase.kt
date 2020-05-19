@@ -1,6 +1,5 @@
 package com.example.cinemaarchive.domain.usecase
 
-import com.example.cinemaarchive.data.network.*
 import com.example.cinemaarchive.domain.repository.MovieRepository
 
 class GetFilmsUseCase(

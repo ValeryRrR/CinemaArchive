@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.domain.usecase.GetFavoriteListUseCase
 import com.example.cinemaarchive.domain.usecase.UpdateFavoriteListUseCase
+import io.reactivex.Flowable
+import io.reactivex.disposables.CompositeDisposable
 
 class FavoriteListViewModel(
     private val updateFavoriteListUseCase: UpdateFavoriteListUseCase,
@@ -20,20 +22,35 @@ class FavoriteListViewModel(
     val errorLiveData: LiveData<String>
         get() = _errorLiveData
 
+    private lateinit var disposable: Flowable<List<Film>>
+    private val compositeDisposable = CompositeDisposable()
+
     init {
-        refreshFavoriteList()
+        createDisposable()
     }
 
-     fun refreshFavoriteList() {
-         if (getFavoriteListUseCase.isFavoriteListEmpty())
+    private fun createDisposable() {
+        disposable = getFavoriteListUseCase.getFavoriteList()
+        compositeDisposable.add(
+            disposable.subscribe{
+            updateFavoriteList(it)
+        })
+    }
+
+    private fun updateFavoriteList(favoriteList: List<Film>){
+        if(favoriteList.isEmpty()){
             _errorLiveData.value = "Favorites is empty"
-         else {
-             _errorLiveData.value = ""
-             _favoriteListLiveData.value = getFavoriteListUseCase.getFavoriteList()
-         }
+        }else {
+            _errorLiveData.value = ""}
+        _favoriteListLiveData.value = favoriteList
     }
 
-    fun updateFavoriteListByPosition(film: Film, isFavorite: Boolean, position: Int){
-        updateFavoriteListUseCase.updateFavoriteListByPosition(film.id, isFavorite, position)
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.dispose()
+    }
+
+    fun onLikeBtnClicked(film: Film, isFavorite: Boolean){
+        updateFavoriteListUseCase.updateFavoriteList(film.id, isFavorite)
     }
 }

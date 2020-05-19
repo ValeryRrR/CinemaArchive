@@ -17,7 +17,7 @@
     <string name="closeDialogMessage">Are you shure?</string>
     <string name="closeDialogTitle">Close app</string>
     <string name="dark_theme">Dark theme</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="share">Share</string>
     <string name="similar">Similar</string>
     <string name="undo">Undo</string>
@@ -25,5 +25,7 @@
     <string name="description">Description</string>
     <string name="language">ru-RU</string>
     <string name="retry">retry</string>
+    <string name="deleted">Deleted</string>
+    <string name="sec">sec</string>
 
 </resources>

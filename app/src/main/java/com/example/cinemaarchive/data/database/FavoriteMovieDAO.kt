@@ -2,6 +2,8 @@ package com.example.cinemaarchive.data.database
 
 import androidx.room.*
 import com.example.cinemaarchive.data.entity.FavoriteMovieEntity
+import io.reactivex.Flowable
+import io.reactivex.Single
 
 @Dao
 interface FavoriteMovieDAO {
@@ -11,17 +13,20 @@ interface FavoriteMovieDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(films: List<FavoriteMovieEntity>)
 
-    @Query("SELECT * FROM FavoriteTable WHERE id LIKE (:id)")
-    fun getById(id: Int): FavoriteMovieEntity?
+    @Query("SELECT * FROM FavoriteTable WHERE id = (:id)")
+    fun getById(id: Int): Single<FavoriteMovieEntity?>
 
     @Query("SELECT * FROM FavoriteTable")
-    fun getAll(): List<FavoriteMovieEntity>
+    fun getAll(): Flowable<List<FavoriteMovieEntity>>
 
     @Delete
     fun delete(film: FavoriteMovieEntity)
 
     @Query("DELETE FROM FavoriteTable")
     fun deleteAll()
+
+    @Query("DELETE FROM FavoriteTable WHERE id =:filmId")
+    fun deleteByFilmId(filmId: Int)
 
     @Query("SELECT * FROM FavoriteTable LIMIT 1")
     fun getFilmIfExist(): FavoriteMovieEntity?

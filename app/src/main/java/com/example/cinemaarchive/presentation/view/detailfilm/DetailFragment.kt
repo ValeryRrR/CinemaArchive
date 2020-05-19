@@ -17,7 +17,7 @@ const val FILM_DETAIL_FRAGMENT_TAG = "FILM_DETAIL_FRAGMENT"
 
 class DetailFragment : Fragment() {
 
-    var iBottomNavOwner: IBottomNavOwner? = null
+    private lateinit var iBottomNavOwner: IBottomNavOwner
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,12 +44,12 @@ class DetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        iBottomNavOwner?.getBottomBar()?.visibility = View.GONE
+        iBottomNavOwner.getBottomBar().visibility = View.GONE
     }
 
     override fun onPause() {
         super.onPause()
-        iBottomNavOwner?.getBottomBar()?.visibility = View.VISIBLE
+        iBottomNavOwner.getBottomBar().visibility = View.VISIBLE
     }
 
     override fun onAttach(context: Context) {

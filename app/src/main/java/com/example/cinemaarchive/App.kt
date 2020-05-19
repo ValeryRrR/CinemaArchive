@@ -64,7 +64,7 @@ class App : Application() {
     }
 
     private fun initRepository() {
-        movieRepository = MovieRepositoryImp(filmDataStoreFactory, filmCache)
+        movieRepository = MovieRepositoryImp(filmDataStoreFactory, filmCache, applicationContext)
     }
 
     private fun initUseCases() {
