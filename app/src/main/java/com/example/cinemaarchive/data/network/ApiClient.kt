@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import com.example.cinemaarchive.R
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 
@@ -23,6 +24,7 @@ const val RU_LANG = "ru-RU"
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(GsonConverterFactory.create())
+    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
     .baseUrl(BASE_URL)
     .build()
 

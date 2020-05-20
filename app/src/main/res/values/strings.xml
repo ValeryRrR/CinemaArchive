@@ -27,5 +27,6 @@
     <string name="retry">retry</string>
     <string name="deleted">Deleted</string>
     <string name="sec">sec</string>
+    <string name="no_internet">Check your internet connection</string>
 
 </resources>
