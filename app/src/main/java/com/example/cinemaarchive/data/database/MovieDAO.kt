@@ -22,6 +22,9 @@ interface MovieDAO {
     @Query("SELECT * FROM FilmDbEntity WHERE id = :id")
     fun getById(id: Int): FilmDbEntity?
 
+    @Query("SELECT * FROM FilmDbEntity LIMIT :dataBaseId, :rowsCount ")
+    fun getRowsStartingAtIndex(dataBaseId: Int, rowsCount: Int): Single<List<FilmDbEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(film: FilmDbEntity)
 
@@ -31,8 +34,11 @@ interface MovieDAO {
     @Delete
     fun delete(film: FilmDbEntity)
 
-    @Query("DELETE FROM FavoriteTable")
+    @Query("DELETE FROM FilmDbEntity")
     fun deleteAll()
+
+    @Query("SELECT count(id) = 1 FROM FilmDbEntity LIMIT 1")
+    fun isEmpty(): Boolean
 
     @Update
     fun update(vararg films: FilmDbEntity?)

@@ -1,7 +1,7 @@
 package com.example.cinemaarchive.data.repository
 
 import android.content.Context
-import android.util.Log
+import android.content.SharedPreferences
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.data.cache.FilmCache
 import com.example.cinemaarchive.data.database.MovieDatabase
@@ -14,6 +14,7 @@ import com.example.cinemaarchive.domain.usecase.GetFilmCallback
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.Callable
 
@@ -28,6 +29,14 @@ class MovieRepositoryImp(
     private val remoteDataSource = filmDataStoreFactory.createRemoteDataStore()
     private lateinit var getFilmsCallback: GetFilmCallback
 
+    private val sp: SharedPreferences =
+        context.getSharedPreferences("page_prefs", Context.MODE_PRIVATE)
+    private var cachedPagesCount
+        get() = getPageFromSharedPreference()
+        set(value) = savePageToSharedPreference(value)
+
+    private val compositeDisposable = CompositeDisposable()
+
     override fun getFilmDetail(filmId: Int) {
         TODO("not implemented")
     }
@@ -35,23 +44,29 @@ class MovieRepositoryImp(
     override fun getFilms(getFilmsCallback: GetFilmCallback, page: Int) {
         this.getFilmsCallback = getFilmsCallback
 
-        if (!isThereInternetConnection(context)) {
+        if (!isThereInternetConnection(context) && cachedPagesCount == 0) {
             getFilmsCallback.onError(context.getString(R.string.no_internet))
             return
         }
 
-        if (page == 1) {
-            deleteAllFromDB()
-            subscribeGetFromCache()
+        if (cachedPagesCount > 0) {
+            when {
+                filmCache.isExpired() -> {
+                    getPageFromNet(page)
+                }
+                page <= cachedPagesCount -> {
+                    getPageFromCache(page)
+                }
+                else -> {
+                    getPageFromNet(page)
+                }
+            }
+            return
         }
 
-        val obs = remoteDataSource.getMovieListPage(page)
-        obs.subscribe { it -> addToCache(it.results.map { it.toFilmDbEntity() }) }
-
-        //addToCache(it.results.map { it.toFilmDbEntity() })
-
-
-        //response.body()!!.results.map { markFavorites(it) }
+        if (page == 1) {
+            getFirstPage()
+        }
     }
 
     override fun updateFavoriteList(filmId: Int, isFavorite: Boolean) {
@@ -66,35 +81,53 @@ class MovieRepositoryImp(
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    private fun subscribeGetFromCache() {
-        val disposable = dataBase.movieDao().getAll()
-            .subscribeOn(Schedulers.io())
-            .filter { it.isNotEmpty() }
-            .map { it.map { film -> film.toFilmDataEntity().toDomainFilm() } }
-            .observeOn(AndroidSchedulers.mainThread())
-
-        //todo fix
-        disposable.subscribe { getFilmsCallback.onSuccess(it) }
+    private fun getPageFromCache(page: Int) {
+        compositeDisposable.add(
+            filmCache.getRowsStartingAtIndex((page - 1) * 20, 20)
+                .map { list -> list.map { it.toFilmDataEntity().toDomainFilm() } }
+                .subscribe { it ->
+                    getFilmsCallback.onSuccess(it)
+                })
     }
 
-    //TODO clearing db for testing, remove it after
-    private fun deleteAllFromDB() {
-        Completable.fromAction {
-            dataBase.movieDao().deleteAll()
-            dataBase.favoriteMovieDao().deleteAll()
-            Log.i(
-                "Flowable",
-                "Completable.fromAction запрошена 1 стр. очистил все данные в бд"
-            )
-        }
-            .subscribeOn(Schedulers.io())
-            .subscribe()
+    private fun getFirstPage() {
+        filmCache.clearAll()
+        cachedPagesCount = 0
+        getPageFromNet(1)
+    }
+
+    private fun getPageFromNet(page: Int) {
+        compositeDisposable.add(
+            remoteDataSource.getMovieListPage(page)
+                .subscribe(
+                    {
+                        getFilmsCallback.onSuccess(it.results.map { it.toDomainFilm() })
+                        addToCache(it.results.map { it.toFilmDbEntity() })
+                    },
+                    {
+                        getFilmsCallback.onError(context.getString(R.string.connection_error))
+                    })
+        )
     }
 
     private fun addToCache(films: List<FilmDbEntity>) {
-        Completable.fromAction { dataBase.movieDao().insertAll(films) }
-            .subscribeOn(Schedulers.io())
-            .subscribe()
+        filmCache.putAll(films)
+        cachedPagesCount++
+    }
+
+
+    fun clearDisposable() {
+        compositeDisposable.dispose()
+    }
+
+    private fun savePageToSharedPreference(page: Int) {
+        val editor = sp.edit()
+        editor.putInt("int_key", page)
+        editor.apply()
+    }
+
+    private fun getPageFromSharedPreference(): Int {
+        return sp.getInt("int_key", 0)
     }
 
     internal class FavoriteListUpdater(

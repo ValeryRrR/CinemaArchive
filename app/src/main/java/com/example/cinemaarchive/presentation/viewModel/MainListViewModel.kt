@@ -33,6 +33,10 @@ class MainListViewModel(
     val errorLiveData: LiveData<SingleEvent<String>>
         get() = _errorLiveData
 
+    private val _errorLoadingNextPageLiveData = MutableLiveData<SingleEvent<String>>()
+    val errorLoadingNextPageLiveData: LiveData<SingleEvent<String>>
+        get() = _errorLoadingNextPageLiveData
+
 
     init {
         loadFistPage()
@@ -48,12 +52,12 @@ class MainListViewModel(
 
         getFilmsUseCase.getFilms(object : GetFilmCallback {
             override fun onError(error: String) {
-                _errorLiveData.value = SingleEvent(error)
-                _loadingStateLiveData.value = SingleEvent(LoadingStates.ERROR)
+                _errorLoadingNextPageLiveData.value = SingleEvent(error)
+                _loadingStateLiveData.value = SingleEvent(LoadingStates.LOADED)
             }
 
             override fun onSuccess(films: List<Film>?) {
-                _responseMutableLiveData.value = films as ArrayList<Film>
+                _responseMutableLiveData += films as ArrayList<Film>
                 if (currentPage <= totalPages) {
                     _loadingStateLiveData.value = SingleEvent(LoadingStates.LOADED)
                 } else isLastPage = true

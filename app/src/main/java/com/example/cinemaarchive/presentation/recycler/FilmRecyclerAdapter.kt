@@ -57,7 +57,6 @@ class FilmRecyclerAdapter(
             LOADING -> {
                 (holder as LoadingViewHolder).mProgressBar.visibility = VISIBLE
             }
-
         }
     }
 
@@ -83,8 +82,8 @@ class FilmRecyclerAdapter(
     private var footerPosition = items.size
     fun addLoadingFooter() {
         isLoadingFooterAdded = true
-        (items as ArrayList<Film>).add(Film())
         footerPosition = items.size
+        (items as ArrayList<Film>).add(Film())
         notifyItemInserted(footerPosition)
     }
 

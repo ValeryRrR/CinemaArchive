@@ -27,4 +27,6 @@
     <string name="sec">сек</string>
     <string name="deleted">Удалено</string>
     <string name="no_internet">Проверьте подключение к интернету</string>
+    <string name="repeat">Повторить</string>
+    <string name="connection_error">Ошибка соединения</string>
 </resources>

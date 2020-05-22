@@ -44,7 +44,7 @@ class App : Application() {
     }
 
     private fun initCaches() {
-        filmCache = FilmCacheImp()
+        filmCache = FilmCacheImp(database)
     }
 
 

@@ -28,5 +28,7 @@
     <string name="deleted">Deleted</string>
     <string name="sec">sec</string>
     <string name="no_internet">Check your internet connection</string>
+    <string name="repeat">Repeat</string>
+    <string name="connection_error">Connection error</string>
 
 </resources>
