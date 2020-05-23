@@ -20,8 +20,6 @@ class RemoteDataSource(
             RU_LANG,
             page
         ) //todo move to interceptor API_KEY, RU_LANG
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun getFilmEntityDetails(filmId: FilmDataEntity): FilmDataEntity? {

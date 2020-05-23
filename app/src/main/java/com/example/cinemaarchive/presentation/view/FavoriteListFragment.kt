@@ -3,7 +3,6 @@ package com.example.cinemaarchive.presentation.view
 import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,7 +69,7 @@ class FavoriteListFragment : Fragment() {
         filmRecyclerAdapter.onItemRemove(position, film)
         film.isFavorite = isFavoriteChecked
         showSnackBar(position, film, favoriteListRecycler)
-        updateFavoriteBtnInMainList(film.id, film.isFavorite)
+        favoriteBtnWasUpdated(film.id, film.isFavorite)
     }
 
     override fun onAttach(context: Context) {
@@ -108,7 +107,7 @@ class FavoriteListFragment : Fragment() {
             override fun onFinish() {
                 if (!film.isFavorite) {
                     viewModel.onLikeBtnClicked(film, film.isFavorite)
-                    updateFavoriteBtnInMainList(film.id, film.isFavorite)
+                    favoriteBtnWasUpdated(film.id, film.isFavorite)
                 }
             }
         }
@@ -117,14 +116,14 @@ class FavoriteListFragment : Fragment() {
         snackBar.setAction(R.string.undo) {
             film.isFavorite = true
             filmRecyclerAdapter.onItemAdd(mAdapterPosition, film)
-            updateFavoriteBtnInMainList(film.id, film.isFavorite)
+            favoriteBtnWasUpdated(film.id, film.isFavorite)
         }
         snackBar.show()
         timer.start()
     }
 
-    private fun updateFavoriteBtnInMainList(filmId: Int, isFavorite: Boolean){
-        mainListViewModel.updateFavoriteBtnInMainList(filmId, isFavorite)
+    private fun favoriteBtnWasUpdated(filmId: Int, isFavorite: Boolean){
+        mainListViewModel.favoriteBtnWasUpdated(filmId, isFavorite)
     }
 }
 

@@ -1,7 +1,6 @@
 package com.example.cinemaarchive.data.database
 
 import androidx.room.*
-import com.example.cinemaarchive.data.entity.FavoriteMovieEntity
 import com.example.cinemaarchive.data.entity.FilmDbEntity
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -20,7 +19,7 @@ interface MovieDAO {
     fun isCached(id: Int): Boolean
 
     @Query("SELECT * FROM FilmDbEntity WHERE id = :id")
-    fun getById(id: Int): FilmDbEntity?
+    fun getById(id: Int): Single<FilmDbEntity?>
 
     @Query("SELECT * FROM FilmDbEntity LIMIT :dataBaseId, :rowsCount ")
     fun getRowsStartingAtIndex(dataBaseId: Int, rowsCount: Int): Single<List<FilmDbEntity>>
@@ -42,5 +41,8 @@ interface MovieDAO {
 
     @Update
     fun update(vararg films: FilmDbEntity?)
+
+    @Query("UPDATE FilmDbEntity SET isFavorite = :isFavorite WHERE id = :id")
+    fun updateIsFavoriteById(isFavorite: Boolean, id: Int)
 
 }

@@ -51,10 +51,10 @@ class MainListFragment : Fragment() {
         mainSwiperefresh.setOnRefreshListener {
             main_progress.visibility = View.VISIBLE
             snackBar?.dismiss()
-            viewModel.refreshFistPage()
+            viewModel.swipeRefreshWasPulled()
         }
 
-        retry.setOnClickListener { viewModel.refreshFistPage() }
+        retry.setOnClickListener { viewModel.swipeRefreshWasPulled() }
 
         viewModel.responseLiveData.observe(viewLifecycleOwner, Observer {
             hideProgresses()

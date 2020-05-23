@@ -1,7 +1,6 @@
 package com.example.cinemaarchive.data.repository
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.data.cache.FilmCache
 import com.example.cinemaarchive.data.database.MovieDatabase
@@ -13,14 +12,13 @@ import com.example.cinemaarchive.domain.repository.MovieRepository
 import com.example.cinemaarchive.domain.usecase.GetFilmCallback
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.Callable
-
 
 class MovieRepositoryImp(
-    private val filmDataStoreFactory: FilmDataStoreFactory,
+    filmDataStoreFactory: FilmDataStoreFactory,
     private val filmCache: FilmCache,
     private val context: Context,
     private val dataBase: MovieDatabase
@@ -28,49 +26,21 @@ class MovieRepositoryImp(
 
     private val remoteDataSource = filmDataStoreFactory.createRemoteDataStore()
     private lateinit var getFilmsCallback: GetFilmCallback
-
-    private val sp: SharedPreferences =
-        context.getSharedPreferences("page_prefs", Context.MODE_PRIVATE)
-    private var cachedPagesCount
-        get() = getPageFromSharedPreference()
-        set(value) = savePageToSharedPreference(value)
-
     private val compositeDisposable = CompositeDisposable()
-
-    override fun getFilmDetail(filmId: Int) {
-        TODO("not implemented")
-    }
+    private var numberOfElementsPerPage: Int = 20
 
     override fun getFilms(getFilmsCallback: GetFilmCallback, page: Int) {
         this.getFilmsCallback = getFilmsCallback
 
-        if (!isThereInternetConnection(context) && cachedPagesCount == 0) {
+        if (!isThereInternetConnection(context) && filmCache.isEmpty()) {
             getFilmsCallback.onError(context.getString(R.string.no_internet))
             return
         }
-
-        if (cachedPagesCount > 0) {
-            when {
-                filmCache.isExpired() -> {
-                    getPageFromNet(page)
-                }
-                page <= cachedPagesCount -> {
-                    getPageFromCache(page)
-                }
-                else -> {
-                    getPageFromNet(page)
-                }
-            }
-            return
-        }
-
-        if (page == 1) {
-            getFirstPage()
-        }
+        checkCache(page)
     }
 
     override fun updateFavoriteList(filmId: Int, isFavorite: Boolean) {
-        Completable.fromCallable(FavoriteListUpdater(filmId, isFavorite, dataBase))
+        Completable.fromCallable(FavoriteDbUpdater(filmId, isFavorite, dataBase))
             .subscribeOn(Schedulers.io())
             .subscribe()
     }
@@ -81,30 +51,50 @@ class MovieRepositoryImp(
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    override fun getFilmDetail(filmId: Int): Single<Film?> {
+        return filmCache.get(filmId).map { it.toFilmDataEntity().toDomainFilm() }
+    }
+
+    private fun checkCache(page: Int) {
+        when {
+            filmCache.isExpired() && isThereInternetConnection(context) -> {
+                filmCache.clearAll()
+                getPageFromNet(page)
+            }
+            filmCache.isPageCached(page) -> {
+                getPageFromCache(page)
+            }
+            else -> {
+                getPageFromNet(page)
+            }
+        }
+    }
+
     private fun getPageFromCache(page: Int) {
         compositeDisposable.add(
-            filmCache.getRowsStartingAtIndex((page - 1) * 20, 20)
+            filmCache.getRowsStartingAtIndex(
+                startIndex = (page - 1) * numberOfElementsPerPage,
+                rowsCount = numberOfElementsPerPage
+            )
                 .map { list -> list.map { it.toFilmDataEntity().toDomainFilm() } }
                 .subscribe { it ->
                     getFilmsCallback.onSuccess(it)
                 })
     }
 
-    private fun getFirstPage() {
-        filmCache.clearAll()
-        cachedPagesCount = 0
-        getPageFromNet(1)
-    }
-
     private fun getPageFromNet(page: Int) {
         compositeDisposable.add(
             remoteDataSource.getMovieListPage(page)
+                .subscribeOn(Schedulers.io())
+                .map { markFavorite(it.results) }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        getFilmsCallback.onSuccess(it.results.map { it.toDomainFilm() })
-                        addToCache(it.results.map { it.toFilmDbEntity() })
+                        getFilmsCallback.onSuccess(it.map {film -> film.toDomainFilm() })
+                        addToCache(it.map {film -> film.toFilmDbEntity() })
                     },
                     {
+                        it.printStackTrace()
                         getFilmsCallback.onError(context.getString(R.string.connection_error))
                     })
         )
@@ -112,53 +102,20 @@ class MovieRepositoryImp(
 
     private fun addToCache(films: List<FilmDbEntity>) {
         filmCache.putAll(films)
-        cachedPagesCount++
     }
-
 
     fun clearDisposable() {
         compositeDisposable.dispose()
     }
 
-    private fun savePageToSharedPreference(page: Int) {
-        val editor = sp.edit()
-        editor.putInt("int_key", page)
-        editor.apply()
-    }
+    private fun markFavorite(films: List<FilmDataEntity>): List<FilmDataEntity> {
+        val favoriteIds = dataBase.favoriteMovieDao().getAllId()
 
-    private fun getPageFromSharedPreference(): Int {
-        return sp.getInt("int_key", 0)
-    }
-
-    internal class FavoriteListUpdater(
-        private val filmId: Int,
-        private val isFavorite: Boolean,
-        private val dataBase: MovieDatabase
-    ) : Callable<Unit> {
-
-        override fun call() {
-            val film = getCachedFilmById(filmId)
-                .toFilmDataEntity()
-                .toFilmFavoriteEntity()
-            film.isFavorite = isFavorite
-            if (isFavorite) {
-                dataBase.favoriteMovieDao().insert(film)
-            } else if (!isFavorite) {
-                dataBase.favoriteMovieDao().deleteByFilmId(film.id)
+        films.forEach { film ->
+            if (favoriteIds.any { film.id == it }) {
+                film.isFavorite = true
             }
         }
-
-        private fun getCachedFilmById(filmId: Int): FilmDbEntity {
-            return dataBase.movieDao().getById(filmId)
-                ?: throw IllegalStateException("Film can't be null before updating favorites")
-        }
+        return films
     }
-
-    /*  TODO fix
-    private fun markFavorites(film: FavoriteMovieEntity) {
-        Log.i("markFavorites", film.name + film.isFavorite.toString())
-        if (film in favorites){
-            film.isFavorite = true
-        }
-    }*/
 }

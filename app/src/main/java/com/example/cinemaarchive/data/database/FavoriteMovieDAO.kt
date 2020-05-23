@@ -19,6 +19,9 @@ interface FavoriteMovieDAO {
     @Query("SELECT * FROM FavoriteTable")
     fun getAll(): Flowable<List<FavoriteMovieEntity>>
 
+    @Query("SELECT id FROM FavoriteTable")
+    fun getAllId(): List<Int>
+
     @Delete
     fun delete(film: FavoriteMovieEntity)
 

@@ -85,12 +85,12 @@ class MainListViewModel(
         _responseMutableLiveData.value?.get(position)?.isFavorite = isFavorite
     }
 
-    fun refreshFistPage(){
+    fun swipeRefreshWasPulled(){
         currentPage = pageStart
         loadFistPage()
     }
 
-    fun updateFavoriteBtnInMainList(filmId: Int, isFavorite: Boolean){
+    fun favoriteBtnWasUpdated(filmId: Int, isFavorite: Boolean){
         _responseMutableLiveData.value?.first{it.id == filmId}?.isFavorite = isFavorite
     }
 }
