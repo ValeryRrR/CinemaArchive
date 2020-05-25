@@ -4,9 +4,15 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import com.example.cinemaarchive.R
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
+import java.util.*
 
 
 const val BASE_URL = "https://api.themoviedb.org/3/"
@@ -16,13 +22,14 @@ const val BASE_URL = "https://api.themoviedb.org/3/"
  *
  */
 const val BASE_URL_IMG = "https://image.tmdb.org/t/p/w300"
-const val API_KEY = "4ad6223423726930ca824e38f157d79e"
+private var apiKey = "4ad6223423726930ca824e38f157d79e"
 
-const val ENG_LANG = "en-US"
-const val RU_LANG = "ru-RU"
+const val ServerLANG = "en-US, ru-RU"
+private var language = Locale.getDefault().toLanguageTag()
 
 
 private val retrofit = Retrofit.Builder()
+    .client(createOkHttpClient(apiKey, language))
     .addConverterFactory(GsonConverterFactory.create())
     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
     .baseUrl(BASE_URL)
@@ -34,6 +41,40 @@ object TheMovieDBmApi {
     }
 }
 
+private fun createOkHttpClient(
+    apiKey: String,
+    language: String
+): OkHttpClient {
+    return OkHttpClient.Builder()
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
+        .addInterceptor(getHeaderInterceptor(apiKey, language))
+        .build()
+}
+
+fun getHeaderInterceptor(
+    apiKey: String,
+    language: String
+): Interceptor {
+    return object : Interceptor  {
+        @Throws(IOException::class)
+        override fun intercept(chain: Interceptor.Chain): Response {
+
+            val url = chain.request()
+                .url
+                .newBuilder()
+                .addQueryParameter("api_key", apiKey)
+                .addQueryParameter("language", language)
+                .build()
+
+            val request =
+                chain.request().newBuilder()
+                    .url(url)
+                    .build()
+            return chain.proceed(request)
+        }
+    }
+}
+
 fun loadImage(posterPath: String?, context: Context): GlideRequest<Drawable?>? {
     return GlideApp
         .with(context)
@@ -42,8 +83,8 @@ fun loadImage(posterPath: String?, context: Context): GlideRequest<Drawable?>? {
         .centerCrop()
 }
 
-private fun getImageURL(posterPath: String?): String?{
-    if (posterPath == null){
+private fun getImageURL(posterPath: String?): String? {
+    if (posterPath == null) {
         return null
     }
     return BASE_URL_IMG + posterPath

@@ -9,8 +9,6 @@ import retrofit2.http.Query
 interface TheMovieDBApi {
     @GET("discover/movie")
     fun getListFilms(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
         @Query("page") pageIndex: Int
     ): Single<ResponseDataClass>
 }

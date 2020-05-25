@@ -1,6 +1,7 @@
 package com.example.cinemaarchive.data.repository
 
 import android.content.Context
+import android.util.Log
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.data.cache.FilmCache
 import com.example.cinemaarchive.data.database.MovieDatabase
@@ -16,6 +17,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 class MovieRepositoryImp(
     filmDataStoreFactory: FilmDataStoreFactory,

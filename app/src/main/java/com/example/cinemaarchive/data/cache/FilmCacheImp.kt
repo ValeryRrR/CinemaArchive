@@ -20,14 +20,14 @@ class FilmCacheImp(
         context.getSharedPreferences("cachePrefs", Context.MODE_PRIVATE)
 
     private var cachedPagesCount
-        get() = getIntFromSharedPreference("cachedPagesCount")
-        set(value) = saveIntToSharedPreference(value, "cachedPagesCount")
+        get() = getFromPref("cachedPagesCount", 0)
+        set(value) = saveToPref(value, "cachedPagesCount")
 
     private val cacheTimeoutMinutes = 20
 
     private var cacheTime
-        get() = getIntFromSharedPreference("cacheTimeout")
-        set(value) = saveIntToSharedPreference(value, "cacheTimeout")
+        get() = getFromPref("cacheTimeout", 0)
+        set(value) = saveToPref(value, "cacheTimeout")
 
     override fun get(filmId: Int): Single<FilmDbEntity?> {
         return dataBase.movieDao().getById(filmId)
@@ -82,13 +82,13 @@ class FilmCacheImp(
         return TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis()).toInt()
     }
 
-    private fun saveIntToSharedPreference(page: Int, key: String) {
+    private fun saveToPref(page: Int, key: String) {
         val editor = sp.edit()
         editor.putInt(key, page)
         editor.apply()
     }
 
-    private fun getIntFromSharedPreference(key: String): Int {
-        return sp.getInt(key, 0)
+    private fun getFromPref(key: String, defValue: Int): Int {
+        return sp.getInt(key, defValue)
     }
 }
