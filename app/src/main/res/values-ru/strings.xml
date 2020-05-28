@@ -9,7 +9,7 @@
     <string name="cancel">отмена</string>
     <string name="closeDialogMessage">Вы уверены, что хотите выйти из приложения?</string>
     <string name="closeDialogTitle">Выход из приложения</string>
-    <string name="share">поделиться</string>
+    <string name="share">Поделиться</string>
     <string name="dark_theme">Темная тема</string>
     <string name="detail">Детали</string>
     <string name="similar">Похожие</string>
@@ -19,14 +19,15 @@
     <string name="film_2_album">Фильм 2 албом</string>
     <string name="home">Главная</string>
     <string name="ic_share">Поделиться</string>
-    <string name="description">Похожие...</string>
+    <string name="description">Похожие</string>
     <string name="remove_from_favorite">Удалено из избранного</string>
     <string name="undo">Отменить</string>
     <string name="language">ru-RU</string>
-    <string name="retry">повторить</string>
+    <string name="retry">Повторить</string>
     <string name="sec">сек</string>
     <string name="deleted">Удалено</string>
     <string name="no_internet">Проверьте подключение к интернету</string>
     <string name="repeat">Повторить</string>
     <string name="connection_error">Ошибка соединения</string>
+    <string name="trailer">трейлер</string>
 </resources>

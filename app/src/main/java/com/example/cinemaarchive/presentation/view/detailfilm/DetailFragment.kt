@@ -1,14 +1,15 @@
 package com.example.cinemaarchive.presentation.view.detailfilm
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.cinemaarchive.R
-import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.data.network.loadImage
+import com.example.cinemaarchive.domain.entity.Film
 import kotlinx.android.synthetic.main.detail_fragment.*
 import kotlinx.android.synthetic.main.detail_fragment_collapsing.*
 
@@ -31,6 +32,11 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val film: Film = arguments?.getParcelable("filmDetail")!!
         fillFilmInformation(film)
+        setLikeState(film.isFavorite)
+
+        btnShare.setOnClickListener { share(film) }
+        btnPlay.setOnClickListener { searchOnYoutube(film) }
+        btnLike.setOnClickListener { favoriteBtnClicked(film) }
     }
 
     private fun fillFilmInformation(film: Film) {
@@ -40,15 +46,16 @@ class DetailFragment : Fragment() {
             ?.into(image_view_poster)
         film_name.text = film.name
         film_description.text = film.description
+        vote_average.text = film.voteAverage.toString()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         iBottomNavOwner.getBottomBar().visibility = View.GONE
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         iBottomNavOwner.getBottomBar().visibility = View.VISIBLE
     }
 
@@ -69,5 +76,39 @@ class DetailFragment : Fragment() {
         args.putParcelable("filmDetail", film)
         myFragment.arguments = args
         return myFragment
+    }
+
+    private fun favoriteBtnClicked(film: Film) {
+        film.isFavorite = !film.isFavorite
+        setLikeState(film.isFavorite)
+        //TODO not implemented updating favorites in data layer
+    }
+
+    private fun setLikeState(favorite: Boolean) {
+        when(favorite) {
+            true -> btnLike.setImageResource(R.drawable.ic_like_detail)
+            false -> btnLike.setImageResource(R.drawable.ic_dislike_detail)
+        }
+    }
+
+    private fun share(film: Film) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, film.name)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(
+            sendIntent,
+            getString(R.string.share)
+        )
+        startActivity(shareIntent)
+    }
+
+    private fun searchOnYoutube(film: Film) {
+        val intent = Intent(Intent.ACTION_SEARCH)
+        intent.setPackage("com.google.android.youtube")
+        intent.putExtra("query", "${film.name} ${getString(R.string.trailer)}")
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
     }
 }

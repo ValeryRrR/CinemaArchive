@@ -18,7 +18,6 @@
     <string name="closeDialogTitle">Close app</string>
     <string name="dark_theme">Dark theme</string>
     <string name="ok">OK</string>
-    <string name="share">Share</string>
     <string name="similar">Similar</string>
     <string name="undo">Undo</string>
     <string name="remove_from_favorite">Removed from favorite</string>
@@ -30,5 +29,7 @@
     <string name="no_internet">Check your internet connection</string>
     <string name="repeat">Repeat</string>
     <string name="connection_error">Connection error</string>
+    <string name="share">Share</string>
+    <string name="trailer">trailer</string>
 
 </resources>

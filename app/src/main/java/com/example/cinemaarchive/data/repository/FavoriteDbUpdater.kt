@@ -6,7 +6,7 @@ import com.example.cinemaarchive.data.entity.toFilmDataEntity
 import com.example.cinemaarchive.data.entity.toFilmFavoriteEntity
 import java.util.concurrent.Callable
 
-internal class FavoriteDbUpdater (
+internal class FavoriteDbUpdater(
     private val filmId: Int,
     private val isFavorite: Boolean,
     private val dataBase: MovieDatabase
@@ -14,14 +14,16 @@ internal class FavoriteDbUpdater (
 
     override fun call() {
         dataBase.movieDao().updateIsFavoriteById(isFavorite, filmId)
-        val film = getCachedFilmById(filmId)
-            .toFilmDataEntity()
-            .toFilmFavoriteEntity()
-        film.isFavorite = isFavorite
-        if (isFavorite) {
-            dataBase.favoriteMovieDao().insert(film)
-        } else if (!isFavorite) {
-            dataBase.favoriteMovieDao().deleteByFilmId(film.id)
+
+        when (isFavorite) {
+            true -> {
+                val film = getCachedFilmById(filmId)
+                    .toFilmDataEntity()
+                    .toFilmFavoriteEntity()
+                film.isFavorite = isFavorite
+                dataBase.favoriteMovieDao().insert(film)
+            }
+            false -> dataBase.favoriteMovieDao().deleteByFilmId(filmId)
         }
     }
 

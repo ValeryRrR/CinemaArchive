@@ -16,18 +16,9 @@ import java.util.*
 
 
 const val BASE_URL = "https://api.themoviedb.org/3/"
-
-/**
- *w300 - image size, supported other "w500", "w780", "w1280", "original"
- *
- */
 const val BASE_URL_IMG = "https://image.tmdb.org/t/p/w300"
 private var apiKey = "4ad6223423726930ca824e38f157d79e"
-
-const val ServerLANG = "en-US, ru-RU"
 private var language = Locale.getDefault().toLanguageTag()
-
-
 private val retrofit = Retrofit.Builder()
     .client(createOkHttpClient(apiKey, language))
     .addConverterFactory(GsonConverterFactory.create())
@@ -41,6 +32,23 @@ object TheMovieDBmApi {
     }
 }
 
+fun loadImage(posterPath: String?, context: Context): GlideRequest<Drawable?>? {
+    return GlideApp
+        .with(context)
+        .load(getImageURL(posterPath))
+        .fallback(R.drawable.gradient) //TODO create holder for films without albums
+        .centerCrop()
+}
+
+fun isThereInternetConnection(context: Context): Boolean {
+    val isConnected: Boolean
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val networkInfo = connectivityManager.activeNetworkInfo
+    isConnected = networkInfo != null
+    return isConnected
+}
+
 private fun createOkHttpClient(
     apiKey: String,
     language: String
@@ -51,11 +59,11 @@ private fun createOkHttpClient(
         .build()
 }
 
-fun getHeaderInterceptor(
+private fun getHeaderInterceptor(
     apiKey: String,
     language: String
 ): Interceptor {
-    return object : Interceptor  {
+    return object : Interceptor {
         @Throws(IOException::class)
         override fun intercept(chain: Interceptor.Chain): Response {
 
@@ -75,26 +83,9 @@ fun getHeaderInterceptor(
     }
 }
 
-fun loadImage(posterPath: String?, context: Context): GlideRequest<Drawable?>? {
-    return GlideApp
-        .with(context)
-        .load(getImageURL(posterPath))
-        .fallback(R.drawable.gradient) //TODO create holder for films without albums
-        .centerCrop()
-}
-
 private fun getImageURL(posterPath: String?): String? {
     if (posterPath == null) {
         return null
     }
     return BASE_URL_IMG + posterPath
-}
-
-fun isThereInternetConnection(context: Context): Boolean {
-    val isConnected: Boolean
-    val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val networkInfo = connectivityManager.activeNetworkInfo
-    isConnected = networkInfo != null
-    return isConnected
 }
