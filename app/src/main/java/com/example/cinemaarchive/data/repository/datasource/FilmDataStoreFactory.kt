@@ -7,16 +7,16 @@ import com.example.cinemaarchive.data.network.TheMovieDBmApi
 
 class FilmDataStoreFactory(private val filmCache: FilmCache, private val context: Context) {
 
-    fun create(): DataSource {
+    /*fun create(): DataSource {
         return if (!filmCache.isExpired()) {
             LocalDataSource(filmCache)
         } else {
-            createRemoteDataStore()
+            //createRemoteDataStore()
         }
-    }
+    }*/
 
-    fun createRemoteDataStore(): DataSource {
+    fun createRemoteDataStore(): RemoteDataSource {
         val restApi: TheMovieDBApi = TheMovieDBmApi.retrofitApi
-        return RemoteDataSource(restApi, filmCache, context)
+        return RemoteDataSource(restApi)
     }
 }

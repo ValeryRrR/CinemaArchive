@@ -3,6 +3,7 @@ package com.example.cinemaarchive
 import android.app.Application
 import com.example.cinemaarchive.data.cache.FilmCache
 import com.example.cinemaarchive.data.cache.FilmCacheImp
+import com.example.cinemaarchive.data.database.MovieDatabase
 import com.example.cinemaarchive.data.network.TheMovieDBmApi
 import com.example.cinemaarchive.data.network.TheMovieDBApi
 import com.example.cinemaarchive.data.repository.MovieRepositoryImp
@@ -23,11 +24,13 @@ class App : Application() {
     lateinit var filmCache: FilmCache
     lateinit var favoriteViewModelFactory: FavoriteViewModelFactory
     lateinit var mainViewModelFactory: MainViewModelFactory
+    lateinit var database: MovieDatabase
 
 
     override fun onCreate() {
         super.onCreate()
         instance = this
+        initDataBase()
         initCaches()
         initFactories()
         initRepository()
@@ -36,8 +39,12 @@ class App : Application() {
         initViewModelFactories()
     }
 
+    private fun initDataBase() {
+        database = MovieDatabase.getInstance(applicationContext)!!
+    }
+
     private fun initCaches() {
-        filmCache = FilmCacheImp()
+        filmCache = FilmCacheImp(database, applicationContext)
     }
 
 
@@ -57,7 +64,11 @@ class App : Application() {
     }
 
     private fun initRepository() {
-        movieRepository = MovieRepositoryImp(filmDataStoreFactory, filmCache)
+        movieRepository = MovieRepositoryImp(
+            filmDataStoreFactory,
+            filmCache,
+            applicationContext,
+            database)
     }
 
     private fun initUseCases() {

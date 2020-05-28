@@ -2,6 +2,7 @@ package com.example.cinemaarchive.presentation.view
 
 import android.content.Context
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.example.cinemaarchive.presentation.viewModel.FavoriteListViewModel
 import com.example.cinemaarchive.presentation.viewModel.MainListViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.favarite_list_fragment.*
+import java.util.concurrent.TimeUnit
 
 class FavoriteListFragment : Fragment() {
 
@@ -27,7 +29,7 @@ class FavoriteListFragment : Fragment() {
     private lateinit var filmRecyclerAdapter: FilmRecyclerAdapter
 
     private val mainListViewModel: MainListViewModel by lazy {
-        ViewModelProvider(activity!!).get(MainListViewModel::class.java)
+        ViewModelProvider(requireActivity()).get(MainListViewModel::class.java)
     }
 
     private val favoriteViewModelFactory = App.instance!!.favoriteViewModelFactory
@@ -58,26 +60,17 @@ class FavoriteListFragment : Fragment() {
                 items,
                 { mCallback?.onOpenDetailFragment(it) },
                 { film: Film, position: Int, isFavoriteChecked: Boolean ->
-                    removeFilmFromFavorites(film, position, isFavoriteChecked) }
+                    likeBtnClicked(film, position, isFavoriteChecked) }
             )
         favoriteListRecycler.adapter = filmRecyclerAdapter
     }
 
-    private fun removeFilmFromFavorites(film: Film, position: Int, isFavoriteChecked: Boolean) {
+    private fun likeBtnClicked(film: Film, position: Int, isFavoriteChecked: Boolean) {
         filmRecyclerAdapter.onItemRemove(position, film)
-        viewModel.updateFavoriteListByPosition(film, isFavoriteChecked, position)
+        film.isFavorite = isFavoriteChecked
         showSnackBar(position, film, favoriteListRecycler)
-        mainListViewModel.updateFavoriteBtnInMainList(film.id, isFavoriteChecked)
+        favoriteBtnWasUpdated(film.id, film.isFavorite)
     }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden){
-            viewModel.refreshFavoriteList()
-            filmRecyclerAdapter.notifyDataSetChanged()
-        }
-    }
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -102,13 +95,35 @@ class FavoriteListFragment : Fragment() {
                 Snackbar.LENGTH_LONG
             )
 
+        val timer = object: CountDownTimer(4000, 1000) {
+            private val deleted = getString(R.string.deleted)
+            private val sec = getString(R.string.sec)
+
+            override fun onTick(millisUntilFinished: Long) {
+                snackBar.setText(deleted + String.format(" %d $sec",
+                    TimeUnit.MILLISECONDS.toSeconds( millisUntilFinished)))
+            }
+
+            override fun onFinish() {
+                if (!film.isFavorite) {
+                    viewModel.onLikeBtnClicked(film, film.isFavorite)
+                    favoriteBtnWasUpdated(film.id, film.isFavorite)
+                }
+            }
+        }
+
+
         snackBar.setAction(R.string.undo) {
             film.isFavorite = true
             filmRecyclerAdapter.onItemAdd(mAdapterPosition, film)
-            viewModel.updateFavoriteListByPosition(film, film.isFavorite, mAdapterPosition)
-            mainListViewModel.updateFavoriteBtnInMainList(film.id, film.isFavorite)
+            favoriteBtnWasUpdated(film.id, film.isFavorite)
         }
         snackBar.show()
+        timer.start()
+    }
+
+    private fun favoriteBtnWasUpdated(filmId: Int, isFavorite: Boolean){
+        mainListViewModel.favoriteBtnWasUpdated(filmId, isFavorite)
     }
 }
 

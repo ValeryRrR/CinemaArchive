@@ -23,4 +23,10 @@
     <string name="remove_from_favorite">Удалено из избранного</string>
     <string name="undo">Отменить</string>
     <string name="language">ru-RU</string>
+    <string name="retry">повторить</string>
+    <string name="sec">сек</string>
+    <string name="deleted">Удалено</string>
+    <string name="no_internet">Проверьте подключение к интернету</string>
+    <string name="repeat">Повторить</string>
+    <string name="connection_error">Ошибка соединения</string>
 </resources>

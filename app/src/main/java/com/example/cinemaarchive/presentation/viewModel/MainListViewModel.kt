@@ -33,6 +33,10 @@ class MainListViewModel(
     val errorLiveData: LiveData<SingleEvent<String>>
         get() = _errorLiveData
 
+    private val _errorLoadingNextPageLiveData = MutableLiveData<SingleEvent<String>>()
+    val errorLoadingNextPageLiveData: LiveData<SingleEvent<String>>
+        get() = _errorLoadingNextPageLiveData
+
 
     init {
         loadFistPage()
@@ -48,12 +52,12 @@ class MainListViewModel(
 
         getFilmsUseCase.getFilms(object : GetFilmCallback {
             override fun onError(error: String) {
-                _errorLiveData.value = SingleEvent(error)
-                _loadingStateLiveData.value = SingleEvent(LoadingStates.ERROR)
+                _errorLoadingNextPageLiveData.value = SingleEvent(error)
+                _loadingStateLiveData.value = SingleEvent(LoadingStates.LOADED)
             }
 
-            override fun onSuccess(films: List<Film>) {
-                _responseMutableLiveData.value = films as ArrayList<Film>
+            override fun onSuccess(films: List<Film>?) {
+                _responseMutableLiveData += films as ArrayList<Film>
                 if (currentPage <= totalPages) {
                     _loadingStateLiveData.value = SingleEvent(LoadingStates.LOADED)
                 } else isLastPage = true
@@ -69,7 +73,7 @@ class MainListViewModel(
                 _loadingStateLiveData.value = SingleEvent(LoadingStates.ERROR)
             }
 
-            override fun onSuccess(films: List<Film>) {
+            override fun onSuccess(films: List<Film>?) {
                 _responseMutableLiveData.value = films as ArrayList<Film>
                 currentPage += 1
             }
@@ -81,12 +85,12 @@ class MainListViewModel(
         _responseMutableLiveData.value?.get(position)?.isFavorite = isFavorite
     }
 
-    fun refreshFistPage(){
+    fun swipeRefreshWasPulled(){
         currentPage = pageStart
         loadFistPage()
     }
 
-    fun updateFavoriteBtnInMainList(filmId: Int, isFavorite: Boolean){
+    fun favoriteBtnWasUpdated(filmId: Int, isFavorite: Boolean){
         _responseMutableLiveData.value?.first{it.id == filmId}?.isFavorite = isFavorite
     }
 }
