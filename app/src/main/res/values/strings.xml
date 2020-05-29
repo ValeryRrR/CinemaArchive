@@ -31,5 +31,6 @@
     <string name="connection_error">Connection error</string>
     <string name="share">Share</string>
     <string name="trailer">trailer</string>
+    <string name="need_youtube">YouTube application required</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.example.cinemaarchive.presentation.view.detailfilm
+package com.example.cinemaarchive.presentation.view.detail
 
 import android.content.Context
 import android.content.Intent
@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.data.network.loadImage
 import com.example.cinemaarchive.domain.entity.Film
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.detail_fragment.*
 import kotlinx.android.synthetic.main.detail_fragment_collapsing.*
 
@@ -105,10 +106,20 @@ class DetailFragment : Fragment() {
     }
 
     private fun searchOnYoutube(film: Film) {
-        val intent = Intent(Intent.ACTION_SEARCH)
-        intent.setPackage("com.google.android.youtube")
-        intent.putExtra("query", "${film.name} ${getString(R.string.trailer)}")
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
+        val packageName = "com.google.android.youtube"
+        if (isAppInstalled(packageName)) {
+            val intent = Intent(Intent.ACTION_SEARCH)
+            intent.setPackage(packageName)
+            intent.putExtra("query", "${film.name} ${getString(R.string.trailer)}")
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }else{
+            Snackbar.make(requireView(), getString(R.string.need_youtube), Snackbar.LENGTH_LONG).show()
+        }
+    }
+
+    private fun isAppInstalled(packageName: String): Boolean {
+        val mIntent: Intent? = requireActivity().packageManager.getLaunchIntentForPackage(packageName)
+        return mIntent != null
     }
 }

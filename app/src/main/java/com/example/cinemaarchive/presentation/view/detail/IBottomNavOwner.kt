@@ -1,4 +1,4 @@
-package com.example.cinemaarchive.presentation.view.detailfilm
+package com.example.cinemaarchive.presentation.view.detail
 
 import android.view.View
 

@@ -7,8 +7,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cinemaarchive.R
-import com.example.cinemaarchive.presentation.view.detailfilm.IBottomNavOwner
-import com.example.cinemaarchive.presentation.view.detailfilm.OnFilmDetailFragmentListener
+import com.example.cinemaarchive.presentation.view.detail.IBottomNavOwner
+import com.example.cinemaarchive.presentation.view.detail.OnFilmDetailFragmentListener
 import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.presentation.enam.BottomNavigationTabs
 import com.example.cinemaarchive.presentation.navigation.Router

@@ -30,4 +30,5 @@
     <string name="repeat">Повторить</string>
     <string name="connection_error">Ошибка соединения</string>
     <string name="trailer">трейлер</string>
+    <string name="need_youtube">Требуется приложение ютюб</string>
 </resources>
