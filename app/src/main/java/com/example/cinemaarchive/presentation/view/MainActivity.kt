@@ -12,6 +12,7 @@ import com.example.cinemaarchive.presentation.view.detail.OnFilmDetailFragmentLi
 import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.presentation.enam.BottomNavigationTabs
 import com.example.cinemaarchive.presentation.navigation.Router
+import com.example.cinemaarchive.presentation.view.remind.NotifyWork.Companion.REMIND_FILM
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_fragment.*
 
@@ -32,6 +33,12 @@ class MainActivity : AppCompatActivity(),
         if(savedInstanceState == null){
             bottomNavigationView.selectedItemId = R.id.bottom_navigation_home_menu
         }
+
+        val remindFilm: Film? = intent.getParcelableExtra(REMIND_FILM)
+        if (remindFilm != null){
+            router.showDetailFilmFragment(remindFilm)
+        }
+
     }
 
     private fun initBottomNavigation() {

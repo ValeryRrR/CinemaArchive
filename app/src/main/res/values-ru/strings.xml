@@ -32,13 +32,12 @@
     <string name="trailer">трейлер</string>
     <string name="need_youtube">Требуется приложение ютюб</string>
 
-
     <string name="notification_title">Напоминание смотреть фильм</string>
-    <string name="notification_subtitle">Surprise!</string>
 
-    <string name="notification_schedule_title">Schedule notification:\u00a0</string>
+    <string name="notification_schedule_title">Запланировано напоминание:\u00a0</string>
     <string name="notification_schedule_pattern">dd.MM.yy \u00B7 HH:mm</string>
     <string name="notification_schedule_error">
-        Schedule notification: Incorrect Date and Time
+        Некорректное время или дата
     </string>
+    <string name="toolbar_remind_title">Напоминание</string>
 </resources>

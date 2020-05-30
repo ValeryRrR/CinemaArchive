@@ -15,8 +15,9 @@ import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.presentation.view.remind.NotifyWork.Companion.NOTIFICATION_ID
 import com.example.cinemaarchive.presentation.view.remind.NotifyWork.Companion.NOTIFICATION_WORK
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.detail_fragment.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.remind_fragment.*
+import java.lang.IllegalStateException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -36,7 +37,8 @@ class ReminderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val film: Film? = arguments?.getParcelable("filmRemind")
+        val film: Film = arguments?.getParcelable("filmRemind")
+            ?: throw IllegalStateException("Film can't be null")
 
         done_fab.setOnClickListener {
             addScheduleNotification(film)
@@ -51,7 +53,7 @@ class ReminderFragment : Fragment() {
         return myFragment
     }
 
-    private fun addScheduleNotification(film: Film?) {
+    private fun addScheduleNotification(film: Film) {
         val customCalendar = Calendar.getInstance()
         customCalendar.set(
             date_p.year, date_p.month, date_p.dayOfMonth, time_p.hour, time_p.minute, 0
@@ -63,11 +65,18 @@ class ReminderFragment : Fragment() {
         if (customTime > currentTime) {
             val data = Data.Builder()
                 .putInt(NOTIFICATION_ID, 0)
+                .putInt("id", film.id)
+                .putString("name", film.name)
+                .putString("description", film.description)
+                .putString("poster", film.filmPoster)
+                .putDouble("voteAverage", film.voteAverage)
+                .putBoolean("isFavorite", film.isFavorite)
                 .build()
 
             val delay = customTime - currentTime
             scheduleNotification(delay, data)
             showDoneMassage(customCalendar)
+            requireActivity().onBackPressed()
         } else {
             showErrorMassage()
         }
@@ -88,7 +97,7 @@ class ReminderFragment : Fragment() {
         val titleNotificationSchedule = getString(R.string.notification_schedule_title)
         val patternNotificationSchedule = getString(R.string.notification_schedule_pattern)
         Snackbar.make(
-            coordinator_reminder,
+            requireActivity().main_activity_container.rootView,
             titleNotificationSchedule + SimpleDateFormat(
                 patternNotificationSchedule, Locale.getDefault()
             ).format(customCalendar.time).toString(),
