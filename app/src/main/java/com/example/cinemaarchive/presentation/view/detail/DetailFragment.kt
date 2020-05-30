@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.data.network.loadImage
 import com.example.cinemaarchive.domain.entity.Film
+import com.example.cinemaarchive.presentation.view.remind.FILM_REMIND_FRAGMENT_TAG
+import com.example.cinemaarchive.presentation.view.remind.ReminderFragment
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.detail_fragment.*
 import kotlinx.android.synthetic.main.detail_fragment_collapsing.*
@@ -38,6 +40,17 @@ class DetailFragment : Fragment() {
         btnShare.setOnClickListener { share(film) }
         btnPlay.setOnClickListener { searchOnYoutube(film) }
         btnLike.setOnClickListener { favoriteBtnClicked(film) }
+        btnRemind.setOnClickListener { showRemindFragment(film) }
+    }
+
+    private fun showRemindFragment(film: Film) {
+        val reminderFragment = ReminderFragment().newInstance(film)
+        val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+
+        fragmentTransaction
+            .add(R.id.containerFragment, reminderFragment, FILM_REMIND_FRAGMENT_TAG)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun fillFilmInformation(film: Film) {
