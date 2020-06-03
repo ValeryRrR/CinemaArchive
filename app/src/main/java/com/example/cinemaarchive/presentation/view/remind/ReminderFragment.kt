@@ -70,6 +70,8 @@ class ReminderFragment : Fragment() {
                 .putString("description", film.description)
                 .putString("poster", film.filmPoster)
                 .putDouble("voteAverage", film.voteAverage)
+                .putIntArray("genre", film.genreIds.toIntArray())
+                .putString("releaseDate", film.releaseDate)
                 .putBoolean("isFavorite", film.isFavorite)
                 .build()
 
@@ -107,6 +109,6 @@ class ReminderFragment : Fragment() {
 
     private fun showErrorMassage() {
         val errorNotificationSchedule = getString(R.string.notification_schedule_error)
-        Snackbar.make(coordinator_reminder, errorNotificationSchedule, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(requireActivity().main_activity_container.rootView, errorNotificationSchedule, Snackbar.LENGTH_LONG).show()
     }
 }

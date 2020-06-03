@@ -11,6 +11,8 @@ data class FavoriteMovieEntity(
     val filmPoster: String?,
     var description: String,
     var voteAverage: Double,
+    var genreIds: List<Int>,
+    val releaseDate: String,
     var isFavorite: Boolean
 ){
     @PrimaryKey(autoGenerate = true)
@@ -24,6 +26,8 @@ fun FavoriteMovieEntity.toDomainFilm(): Film {
         filmPoster,
         description,
         voteAverage,
+        genreIds,
+        releaseDate,
         isFavorite
     )
 }
@@ -35,6 +39,8 @@ fun FavoriteMovieEntity.toFilmDataEntity(): FilmDataEntity {
         filmPoster,
         description,
         voteAverage,
+        genreIds,
+        releaseDate,
         isFavorite
     )
 }

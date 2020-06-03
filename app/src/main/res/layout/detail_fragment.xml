@@ -76,11 +76,18 @@
                 android:paddingTop="8dp" />
 
             <TextView
-                android:id="@+id/film_otherInformanions"
+                android:id="@+id/releaseDateTV"
+                android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:text="Directors: Nick Bruno, Troy Quane" />
+                android:paddingTop="8dp" />
+
+            <TextView
+                android:id="@+id/film_genre"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp" />
         </LinearLayout>
 
     </LinearLayout>

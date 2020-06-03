@@ -24,6 +24,12 @@ data class FilmDataEntity(
     @SerializedName("vote_average")
     var voteAverage: Double,
 
+    @SerializedName("genre_ids")
+    val genreIds: List<Int>,
+
+    @SerializedName("release_date")
+    val releaseDate: String,
+
     var isFavorite: Boolean
 
 ) : Parcelable
@@ -35,6 +41,8 @@ fun FilmDataEntity.toDomainFilm(): Film {
         filmPoster,
         description,
         voteAverage,
+        genreIds,
+        releaseDate,
         isFavorite
     )
 }
@@ -46,6 +54,8 @@ fun FilmDataEntity.toFilmDbEntity(): FilmDbEntity {
         filmPoster,
         description,
         voteAverage,
+        genreIds,
+        releaseDate,
         isFavorite
     )
 }
@@ -57,6 +67,8 @@ fun FavoriteMovieEntity.toFilmDbEntity(): FilmDbEntity {
         filmPoster,
         description,
         voteAverage,
+        genreIds,
+        releaseDate,
         isFavorite
     )
 }
@@ -68,6 +80,8 @@ fun FilmDataEntity.toFilmFavoriteEntity(): FavoriteMovieEntity {
         filmPoster,
         description,
         voteAverage,
+        genreIds,
+        releaseDate,
         isFavorite
     )
 }

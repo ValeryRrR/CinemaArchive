@@ -10,7 +10,9 @@ import com.example.cinemaarchive.data.repository.MovieRepositoryImp
 import com.example.cinemaarchive.data.repository.datasource.FilmDataStoreFactory
 import com.example.cinemaarchive.domain.usecase.GetFavoriteListUseCase
 import com.example.cinemaarchive.domain.usecase.GetFilmsUseCase
+import com.example.cinemaarchive.domain.usecase.GetGenresUseCase
 import com.example.cinemaarchive.domain.usecase.UpdateFavoriteListUseCase
+import com.example.cinemaarchive.presentation.view.detail.DetailViewModelFactory
 import com.example.cinemaarchive.presentation.viewModel.FavoriteViewModelFactory
 import com.example.cinemaarchive.presentation.viewModel.MainViewModelFactory
 
@@ -21,9 +23,11 @@ class App : Application() {
     lateinit var filmDataStoreFactory: FilmDataStoreFactory
     lateinit var updateFavoriteListUseCase: UpdateFavoriteListUseCase
     lateinit var getFavoriteListUseCase: GetFavoriteListUseCase
+    lateinit var getGenresUseCase: GetGenresUseCase
     lateinit var filmCache: FilmCache
     lateinit var favoriteViewModelFactory: FavoriteViewModelFactory
     lateinit var mainViewModelFactory: MainViewModelFactory
+    lateinit var detailViewModelFactory: DetailViewModelFactory
     lateinit var database: MovieDatabase
 
 
@@ -61,6 +65,9 @@ class App : Application() {
             updateFavoriteListUseCase,
             getFilmsUseCase
         )
+        detailViewModelFactory = DetailViewModelFactory(
+            getGenresUseCase
+        )
     }
 
     private fun initRepository() {
@@ -75,6 +82,7 @@ class App : Application() {
         getFilmsUseCase = GetFilmsUseCase(movieRepository)
         updateFavoriteListUseCase = UpdateFavoriteListUseCase(movieRepository)
         getFavoriteListUseCase = GetFavoriteListUseCase(movieRepository)
+        getGenresUseCase = GetGenresUseCase(movieRepository)
     }
 
     private fun initRetrofit() {

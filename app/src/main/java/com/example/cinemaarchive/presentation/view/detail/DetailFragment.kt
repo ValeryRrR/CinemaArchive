@@ -7,6 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.example.cinemaarchive.App
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.data.network.loadImage
 import com.example.cinemaarchive.domain.entity.Film
@@ -22,6 +25,10 @@ const val FILM_DETAIL_FRAGMENT_TAG = "FILM_DETAIL_FRAGMENT"
 class DetailFragment : Fragment() {
 
     private lateinit var iBottomNavOwner: IBottomNavOwner
+    private val detailViewModelFactory = App.instance!!.detailViewModelFactory
+    private val detailViewModel: DetailViewModel by lazy {
+        ViewModelProvider(this, detailViewModelFactory).get(DetailViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +48,16 @@ class DetailFragment : Fragment() {
         btnPlay.setOnClickListener { searchOnYoutube(film) }
         btnLike.setOnClickListener { favoriteBtnClicked(film) }
         btnRemind.setOnClickListener { showRemindFragment(film) }
+
+
+        detailViewModel.genre.observe(viewLifecycleOwner, Observer{ genres ->
+            val prefix = getString(R.string.genres)
+            film_genre.text = genres.joinToString (
+                prefix = prefix,
+                separator = ", "
+            )
+        })
+        detailViewModel.onViewCreated(film)
     }
 
     private fun showRemindFragment(film: Film) {
@@ -61,6 +78,7 @@ class DetailFragment : Fragment() {
         film_name.text = film.name
         film_description.text = film.description
         vote_average.text = film.voteAverage.toString()
+        releaseDateTV.text = getString(R.string.releaseDate, film.releaseDate)
     }
 
     override fun onStart() {

@@ -86,10 +86,12 @@ class NotifyWork(context: Context, params: WorkerParameters) : Worker(context, p
     private fun createFilmFromInputData(data: Data): Film {
         return Film(
             data.getInt("id", 0),
-            data.getString("name")!!,
+            data.getString("name").toString(),
             data.getString("poster"),
-            data.getString("description")!!,
+            data.getString("description").toString(),
             data.getDouble("voteAverage", 0.0),
+            data.getIntArray("genre")!!.toList(),
+            data.getString("releaseDate").toString(),
             data.getBoolean("isFavorite", false)
         )
     }

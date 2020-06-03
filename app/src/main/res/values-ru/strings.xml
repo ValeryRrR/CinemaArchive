@@ -40,4 +40,6 @@
         Некорректное время или дата
     </string>
     <string name="toolbar_remind_title">Напоминание</string>
+    <string name="genres">Жанры:\u0020 </string>
+    <string name="releaseDate">Дата релиза: %1$s</string>
 </resources>

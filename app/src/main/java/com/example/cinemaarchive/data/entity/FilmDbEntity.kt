@@ -3,6 +3,8 @@ package com.example.cinemaarchive.data.entity
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.example.cinemaarchive.data.database.Converters
 
 @Entity(tableName = "FilmDbEntity", indices = [Index("id", unique = true )])
 data class FilmDbEntity(
@@ -11,6 +13,9 @@ data class FilmDbEntity(
     val filmPoster: String?,
     var description: String,
     var voteAverage: Double,
+    @TypeConverters(Converters::class)
+    var genreIds: List<Int>,
+    val releaseDate: String,
     var isFavorite: Boolean
 
 ){
@@ -25,6 +30,8 @@ fun FilmDbEntity.toFilmDataEntity(): FilmDataEntity {
         filmPoster,
         description,
         voteAverage,
+        genreIds,
+        releaseDate,
         isFavorite
     )
 }

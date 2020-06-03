@@ -42,4 +42,6 @@
     <string name="notification_schedule_error">
         Schedule notification: Incorrect Date or Time
     </string>
+    <string name="genres">Genres:\u0020</string>
+    <string name="releaseDate">Release date: %1$s</string>
 </resources>

@@ -85,7 +85,9 @@ class MainListFragment : Fragment() {
     }
 
     private fun showLoadingFooter() {
-        filmRecyclerAdapter.addLoadingFooter()
+        mainFragmentRecycler.post {
+            filmRecyclerAdapter.addLoadingFooter()
+        }
     }
 
     private fun hideLoadingFooter() {
