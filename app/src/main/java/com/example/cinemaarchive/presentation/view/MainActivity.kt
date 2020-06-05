@@ -2,6 +2,7 @@ package com.example.cinemaarchive.presentation.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -13,6 +14,8 @@ import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.presentation.enam.BottomNavigationTabs
 import com.example.cinemaarchive.presentation.navigation.Router
 import com.example.cinemaarchive.presentation.view.remind.NotifyWork.Companion.REMIND_FILM
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_fragment.*
 
@@ -38,6 +41,18 @@ class MainActivity : AppCompatActivity(),
         if (remindFilm != null){
             router.showDetailFilmFragment(remindFilm)
         }
+
+
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("Token", "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+                // Get new Instance ID token
+                val token = task.result?.token
+                Log.d("Token", token)
+            })
 
     }
 
