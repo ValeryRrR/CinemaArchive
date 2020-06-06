@@ -12,8 +12,8 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.domain.entity.Film
-import com.example.cinemaarchive.presentation.view.remind.NotifyWork.Companion.NOTIFICATION_ID
-import com.example.cinemaarchive.presentation.view.remind.NotifyWork.Companion.NOTIFICATION_WORK
+import com.example.cinemaarchive.presentation.view.remind.Notifier.Companion.NOTIFICATION_ID
+import com.example.cinemaarchive.presentation.view.remind.Notifier.Companion.NOTIFICATION_WORK
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.remind_fragment.*
