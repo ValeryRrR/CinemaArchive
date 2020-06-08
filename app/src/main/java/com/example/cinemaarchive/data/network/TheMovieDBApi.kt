@@ -1,8 +1,7 @@
 package com.example.cinemaarchive.data.network
 
-import io.reactivex.Flowable
+import com.example.cinemaarchive.data.entity.Genres
 import io.reactivex.Single
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -11,5 +10,8 @@ interface TheMovieDBApi {
     fun getListFilms(
         @Query("page") pageIndex: Int
     ): Single<ResponseDataClass>
+
+    @GET("genre/movie/list")
+    fun getAllGenres(): Single<Genres>
 }
 

@@ -18,7 +18,6 @@
     <string name="closeDialogTitle">Close app</string>
     <string name="dark_theme">Dark theme</string>
     <string name="ok">OK</string>
-    <string name="share">Share</string>
     <string name="similar">Similar</string>
     <string name="undo">Undo</string>
     <string name="remove_from_favorite">Removed from favorite</string>
@@ -30,5 +29,19 @@
     <string name="no_internet">Check your internet connection</string>
     <string name="repeat">Repeat</string>
     <string name="connection_error">Connection error</string>
+    <string name="share">Share</string>
+    <string name="trailer">trailer</string>
+    <string name="need_youtube">YouTube application required</string>
 
+
+    <string name="notification_title">Reminder to watch the movie</string>
+    <string name="toolbar_remind_title">Reminder</string>
+
+    <string name="notification_schedule_title">Schedule notification:\u00a0</string>
+    <string name="notification_schedule_pattern">dd.MM.yy \u00B7 HH:mm</string>
+    <string name="notification_schedule_error">
+        Schedule notification: Incorrect Date or Time
+    </string>
+    <string name="genres">Genres:\u0020</string>
+    <string name="releaseDate">Release date: %1$s</string>
 </resources>

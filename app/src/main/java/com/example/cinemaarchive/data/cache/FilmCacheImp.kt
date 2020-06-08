@@ -8,6 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
@@ -15,6 +16,8 @@ class FilmCacheImp(
     private val dataBase: MovieDatabase,
     context: Context
 ) : FilmCache {
+
+    private val compositeDisposable = CompositeDisposable()
 
     private val sp: SharedPreferences =
         context.getSharedPreferences("cachePrefs", Context.MODE_PRIVATE)
@@ -50,9 +53,13 @@ class FilmCacheImp(
     }
 
     override fun putAll(listFilms: List<FilmDbEntity>) {
+        compositeDisposable.add(
         Completable.fromAction { dataBase.movieDao().insertAll(listFilms) }
             .subscribeOn(Schedulers.io())
-            .subscribe()
+            .subscribe({},
+                {
+                    it.printStackTrace()
+                }))
         cachedPagesCount++
     }
 
@@ -65,11 +72,15 @@ class FilmCacheImp(
     }
 
     override fun clearAll() {
+        compositeDisposable.add(
         Completable.fromAction {
             dataBase.movieDao().deleteAll()
         }
             .subscribeOn(Schedulers.io())
-            .subscribe()
+            .subscribe({},
+            {
+                it.printStackTrace()
+            }))
         cachedPagesCount = 0
         cacheTime = getCurrentMinute()
     }

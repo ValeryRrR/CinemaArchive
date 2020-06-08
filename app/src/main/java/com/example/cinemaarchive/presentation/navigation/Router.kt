@@ -8,8 +8,8 @@ import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.presentation.enam.BottomNavigationTabs
 import com.example.cinemaarchive.presentation.view.FavoriteListFragment
 import com.example.cinemaarchive.presentation.view.MainListFragment
-import com.example.cinemaarchive.presentation.view.detailfilm.DetailFragment
-import com.example.cinemaarchive.presentation.view.detailfilm.FILM_DETAIL_FRAGMENT_TAG
+import com.example.cinemaarchive.presentation.view.detail.DetailFragment
+import com.example.cinemaarchive.presentation.view.detail.FILM_DETAIL_FRAGMENT_TAG
 
 class Router(private val supportFragmentManager: FragmentManager) {
 

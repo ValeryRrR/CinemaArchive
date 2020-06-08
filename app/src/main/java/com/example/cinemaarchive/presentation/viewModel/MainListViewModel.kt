@@ -91,7 +91,7 @@ class MainListViewModel(
     }
 
     fun favoriteBtnWasUpdated(filmId: Int, isFavorite: Boolean){
-        _responseMutableLiveData.value?.first{it.id == filmId}?.isFavorite = isFavorite
+        _responseMutableLiveData.value?.firstOrNull{it.id == filmId}?.isFavorite = isFavorite
     }
 }
 /**

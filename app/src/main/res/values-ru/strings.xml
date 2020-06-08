@@ -9,7 +9,7 @@
     <string name="cancel">отмена</string>
     <string name="closeDialogMessage">Вы уверены, что хотите выйти из приложения?</string>
     <string name="closeDialogTitle">Выход из приложения</string>
-    <string name="share">поделиться</string>
+    <string name="share">Поделиться</string>
     <string name="dark_theme">Темная тема</string>
     <string name="detail">Детали</string>
     <string name="similar">Похожие</string>
@@ -19,14 +19,27 @@
     <string name="film_2_album">Фильм 2 албом</string>
     <string name="home">Главная</string>
     <string name="ic_share">Поделиться</string>
-    <string name="description">Похожие...</string>
+    <string name="description">Похожие</string>
     <string name="remove_from_favorite">Удалено из избранного</string>
     <string name="undo">Отменить</string>
     <string name="language">ru-RU</string>
-    <string name="retry">повторить</string>
+    <string name="retry">Повторить</string>
     <string name="sec">сек</string>
     <string name="deleted">Удалено</string>
     <string name="no_internet">Проверьте подключение к интернету</string>
     <string name="repeat">Повторить</string>
     <string name="connection_error">Ошибка соединения</string>
+    <string name="trailer">трейлер</string>
+    <string name="need_youtube">Требуется приложение ютюб</string>
+
+    <string name="notification_title">Напоминание смотреть фильм</string>
+
+    <string name="notification_schedule_title">Запланировано напоминание:\u00a0</string>
+    <string name="notification_schedule_pattern">dd.MM.yy \u00B7 HH:mm</string>
+    <string name="notification_schedule_error">
+        Некорректное время или дата
+    </string>
+    <string name="toolbar_remind_title">Напоминание</string>
+    <string name="genres">Жанры:\u0020 </string>
+    <string name="releaseDate">Дата релиза: %1$s</string>
 </resources>

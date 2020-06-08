@@ -13,7 +13,11 @@ class RemoteDataSource(
     fun getMovieListPage(page: Int): Single<ResponseDataClass> {
         return theMovieDBApi.getListFilms(
             page
-        ) //todo move to interceptor API_KEY, RU_LANG
+        )
+    }
+
+    fun getAllGenre():Single<Genres>{
+        return theMovieDBApi.getAllGenres()
     }
 
     fun getFilmEntityDetails(filmId: FilmDataEntity): FilmDataEntity? {

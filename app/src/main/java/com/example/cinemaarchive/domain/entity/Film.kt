@@ -10,8 +10,10 @@ data class Film(
     val filmPoster: String?,
     var description: String,
     var voteAverage: Double,
+    val genreIds: List<Int>,
+    val releaseDate: String,
     var isFavorite: Boolean
     ): Parcelable{
 
-    constructor() : this(0, "", "", "", 0.0, false)
+    constructor() : this(0, "", "", "",0.0, listOf(), "", false)
 }

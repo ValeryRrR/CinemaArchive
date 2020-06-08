@@ -13,7 +13,7 @@ import com.example.cinemaarchive.App
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.presentation.recycler.FilmRecyclerAdapter
-import com.example.cinemaarchive.presentation.view.detailfilm.OnFilmDetailFragmentListener
+import com.example.cinemaarchive.presentation.view.detail.OnFilmDetailFragmentListener
 import com.example.cinemaarchive.presentation.viewModel.FavoriteListViewModel
 import com.example.cinemaarchive.presentation.viewModel.MainListViewModel
 import com.google.android.material.snackbar.Snackbar

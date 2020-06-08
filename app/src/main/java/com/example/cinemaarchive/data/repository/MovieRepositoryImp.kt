@@ -17,7 +17,6 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.util.*
 
 class MovieRepositoryImp(
     filmDataStoreFactory: FilmDataStoreFactory,
@@ -51,6 +50,10 @@ class MovieRepositoryImp(
         return dataBase.favoriteMovieDao().getAll()
             .map { it.map { film -> film.toFilmDataEntity().toDomainFilm() } }
             .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun getAllGenres(): Single<Genres> {
+        return remoteDataSource.getAllGenre() //todo cache it
     }
 
     override fun getFilmDetail(filmId: Int): Single<Film?> {

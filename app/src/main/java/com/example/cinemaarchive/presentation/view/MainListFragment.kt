@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.cinemaarchive.App
 import com.example.cinemaarchive.R
-import com.example.cinemaarchive.presentation.view.detailfilm.OnFilmDetailFragmentListener
+import com.example.cinemaarchive.presentation.view.detail.OnFilmDetailFragmentListener
 import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.presentation.enam.LoadingStates
 import com.example.cinemaarchive.presentation.recycler.FilmRecyclerAdapter
@@ -85,7 +85,9 @@ class MainListFragment : Fragment() {
     }
 
     private fun showLoadingFooter() {
-        filmRecyclerAdapter.addLoadingFooter()
+        mainFragmentRecycler.post {
+            filmRecyclerAdapter.addLoadingFooter()
+        }
     }
 
     private fun hideLoadingFooter() {
