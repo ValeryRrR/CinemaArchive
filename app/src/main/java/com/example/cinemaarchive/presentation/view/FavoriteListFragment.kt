@@ -9,30 +9,32 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.cinemaarchive.App
 import com.example.cinemaarchive.R
+import com.example.cinemaarchive.di.AppModule
+import com.example.cinemaarchive.di.presentation.DaggerViewModelComponent
 import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.presentation.recycler.FilmRecyclerAdapter
 import com.example.cinemaarchive.presentation.view.detail.OnFilmDetailFragmentListener
 import com.example.cinemaarchive.presentation.viewModel.FavoriteListViewModel
+import com.example.cinemaarchive.presentation.viewModel.FavoriteViewModelFactory
 import com.example.cinemaarchive.presentation.viewModel.MainListViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.favarite_list_fragment.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class FavoriteListFragment : Fragment() {
+    @Inject
+    lateinit var favoriteViewModelFactory: FavoriteViewModelFactory
 
     private val viewModel: FavoriteListViewModel by lazy {
         ViewModelProvider(this, favoriteViewModelFactory).get(FavoriteListViewModel::class.java)
     }
     private var mCallback: OnFilmDetailFragmentListener? = null
     private lateinit var filmRecyclerAdapter: FilmRecyclerAdapter
-
     private val mainListViewModel: MainListViewModel by lazy {
         ViewModelProvider(requireActivity()).get(MainListViewModel::class.java)
     }
-
-    private val favoriteViewModelFactory = App.instance!!.favoriteViewModelFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +46,13 @@ class FavoriteListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val component = DaggerViewModelComponent
+            .builder()
+            .appModule(AppModule(requireContext()))
+            .build()
+        component.inject(this)
+
         initRecycler(ArrayList())
 
         viewModel.errorLiveData.observe(viewLifecycleOwner, Observer {

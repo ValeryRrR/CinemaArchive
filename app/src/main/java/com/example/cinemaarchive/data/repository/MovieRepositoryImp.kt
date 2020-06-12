@@ -7,7 +7,7 @@ import com.example.cinemaarchive.data.cache.FilmCache
 import com.example.cinemaarchive.data.database.MovieDatabase
 import com.example.cinemaarchive.data.entity.*
 import com.example.cinemaarchive.data.network.isThereInternetConnection
-import com.example.cinemaarchive.data.repository.datasource.FilmDataStoreFactory
+import com.example.cinemaarchive.data.repository.datasource.DataStoreFactory
 import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.domain.repository.MovieRepository
 import com.example.cinemaarchive.domain.usecase.GetFilmCallback
@@ -19,13 +19,13 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class MovieRepositoryImp(
-    filmDataStoreFactory: FilmDataStoreFactory,
+    dataStoreFactory: DataStoreFactory,
     private val filmCache: FilmCache,
     private val context: Context,
     private val dataBase: MovieDatabase
 ) : MovieRepository {
 
-    private val remoteDataSource = filmDataStoreFactory.createRemoteDataStore()
+    private val remoteDataSource = dataStoreFactory.createRemoteDataStore()
     private lateinit var getFilmsCallback: GetFilmCallback
     private val compositeDisposable = CompositeDisposable()
     private var numberOfElementsPerPage: Int = 20
