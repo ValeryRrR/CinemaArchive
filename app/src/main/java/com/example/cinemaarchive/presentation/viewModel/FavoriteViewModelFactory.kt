@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.cinemaarchive.domain.usecase.GetFavoriteListUseCase
 import com.example.cinemaarchive.domain.usecase.UpdateFavoriteListUseCase
+import javax.inject.Inject
 
-class FavoriteViewModelFactory(
+class FavoriteViewModelFactory @Inject constructor(
     private val updateFavoriteListUseCase: UpdateFavoriteListUseCase,
     private val getFavoriteListUseCase: GetFavoriteListUseCase
 ) : ViewModelProvider.Factory {

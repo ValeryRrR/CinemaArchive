@@ -12,20 +12,26 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.cinemaarchive.App
 import com.example.cinemaarchive.R
 import com.example.cinemaarchive.data.network.loadImage
+import com.example.cinemaarchive.di.AppModule
+import com.example.cinemaarchive.di.presentation.DaggerViewModelComponent
 import com.example.cinemaarchive.domain.entity.Film
 import com.example.cinemaarchive.presentation.view.remind.FILM_REMIND_FRAGMENT_TAG
 import com.example.cinemaarchive.presentation.view.remind.ReminderFragment
+import com.example.cinemaarchive.presentation.viewModel.DetailViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.detail_fragment.*
 import kotlinx.android.synthetic.main.detail_fragment_collapsing.*
+import javax.inject.Inject
 
 
 const val FILM_DETAIL_FRAGMENT_TAG = "FILM_DETAIL_FRAGMENT"
 
 class DetailFragment : Fragment() {
 
+    @Inject
+    lateinit var detailViewModelFactory: DetailViewModelFactory //= App.instance!!.detailViewModelFactory
+
     private lateinit var iBottomNavOwner: IBottomNavOwner
-    private val detailViewModelFactory = App.instance!!.detailViewModelFactory
     private val detailViewModel: DetailViewModel by lazy {
         ViewModelProvider(this, detailViewModelFactory).get(DetailViewModel::class.java)
     }
@@ -40,6 +46,13 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val component = DaggerViewModelComponent
+            .builder()
+            .appModule(AppModule(requireContext()))
+            .build()
+        component.inject(this)
+
         val film: Film = arguments?.getParcelable("filmDetail")!!
         fillFilmInformation(film)
         setLikeState(film.isFavorite)

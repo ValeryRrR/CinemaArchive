@@ -96,4 +96,9 @@ dependencies {
 
     // Firebase messaging
     implementation 'com.google.firebase:firebase-messaging:20.2.0'
+
+    // Dagger
+    def dagger_version = "2.27"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation "com.google.dagger:dagger:$dagger_version"
 }

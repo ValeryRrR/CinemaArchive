@@ -7,10 +7,7 @@ import com.example.cinemaarchive.domain.usecase.GetFilmCallback
 
 class LocalDataSource(private val filmCache: FilmCache): DataSource {
     override fun getMovieListPage(getFilmsCallback: GetFilmCallback, page: Int){
-        /*if (filmCache.getAll().isNotEmpty()) {
-            getFilmsCallback.onSuccess(filmCache.getAll().map { it.toDomainFilm() })
-        }else
-            getFilmsCallback.onError("Cache is empty")*/
+        TODO("not implemented")
     }
 
     override fun getFilmEntityDetails(filmId: FilmDataEntity): FilmDataEntity? {
