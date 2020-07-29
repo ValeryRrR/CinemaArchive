@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OtusHomeWork1</string>
+    <string name="app_name">CinemaArchive</string>
 
     <string name="detail">Detail</string>
     <string name="film_1">Film 1</string>
@@ -8,7 +8,40 @@
     <string name="spies_in_disgues">Spies in disgues</string>
     <string name="union_of_safety">Union of safety</string>
     <string name="comment">Comment</string>
-    <string name="ic_share">ic_share</string>
+    <string name="ic_share">Share</string>
     <string name="Invite_friends">Invite friends</string>
+    <string name="favorite">Favorites</string>
+    <string name="home">Home</string>
+    <string name="favoritesListEmpty">Favorites list empty</string>
+    <string name="cancel">Cancel</string>
+    <string name="closeDialogMessage">Are you shure?</string>
+    <string name="closeDialogTitle">Close app</string>
+    <string name="dark_theme">Dark theme</string>
+    <string name="ok">OK</string>
+    <string name="similar">Similar</string>
+    <string name="undo">Undo</string>
+    <string name="remove_from_favorite">Removed from favorite</string>
+    <string name="description">Description</string>
+    <string name="language">ru-RU</string>
+    <string name="retry">retry</string>
+    <string name="deleted">Deleted</string>
+    <string name="sec">sec</string>
+    <string name="no_internet">Check your internet connection</string>
+    <string name="repeat">Repeat</string>
+    <string name="connection_error">Connection error</string>
+    <string name="share">Share</string>
+    <string name="trailer">trailer</string>
+    <string name="need_youtube">YouTube application required</string>
 
+
+    <string name="notification_title">Reminder to watch the movie</string>
+    <string name="toolbar_remind_title">Reminder</string>
+
+    <string name="notification_schedule_title">Schedule notification:\u00a0</string>
+    <string name="notification_schedule_pattern">dd.MM.yy \u00B7 HH:mm</string>
+    <string name="notification_schedule_error">
+        Schedule notification: Incorrect Date or Time
+    </string>
+    <string name="genres">Genres:\u0020</string>
+    <string name="releaseDate">Release date: %1$s</string>
 </resources>
